@@ -30,6 +30,18 @@
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     }
 
+    .columns {
+      display: flex;
+    }
+
+    .column {
+      flex: 1;
+    }
+
+    .column.left {
+      margin-right: 2rem;
+    }
+
     button {
       font-family: Arial, sans-serif;
       font-size: 14px;
@@ -39,6 +51,7 @@
       padding: 8px 16px;
       border-radius: 4px;
       cursor: pointer;
+      float: right;
     }
 
     button:hover {
@@ -120,10 +133,9 @@
 
         // Agregar la nueva pregunta y respuesta al DOM
         var nuevaPreguntaHTML = '<li>' + nuevoId + '. ' + nuevaPregunta + '</li>';
-        var nuevaRespuestaHTML = '<li class="respuesta" id="respuesta-' + nuevoId + '">' + nuevaRespuesta + '</li>';
-        var toggleButtonHTML = '<button onclick="toggleRespuesta(' + nuevoId + ')" id="toggle-' + nuevoId + '">Mostrar respuesta</button>';
+        var nuevaRespuestaHTML = '<li><button id="toggle-' + nuevoId + '" onclick="toggleRespuesta(' + nuevoId + ')">Mostrar respuesta</button><span class="respuesta" id="respuesta-' + nuevoId + '">' + nuevaRespuesta + '</span></li>';
         document.getElementById("preguntas").innerHTML += nuevaPreguntaHTML;
-        document.getElementById("respuestas").innerHTML += nuevaRespuestaHTML + toggleButtonHTML;
+        document.getElementById("respuestas").innerHTML += nuevaRespuestaHTML;
       }
     }
 
@@ -142,18 +154,13 @@
       // Remover la pregunta y respuesta del DOM
       var preguntaElement = document.getElementById("pregunta-" + idBorrar);
       var respuestaElement = document.getElementById("respuesta-" + idBorrar);
-      var toggleButtonElement = document.getElementById("toggle-" + idBorrar);
 
       if (preguntaElement) {
         preguntaElement.remove();
       }
 
       if (respuestaElement) {
-        respuestaElement.remove();
-      }
-
-      if (toggleButtonElement) {
-        toggleButtonElement.remove();
+        respuestaElement.parentNode.remove();
       }
     }
   </script>
@@ -162,23 +169,21 @@
   <div class="container">
     <h1>Selector de preguntas y respuestas</h1>
     <div class="columns">
-      <div class="column">
+      <div class="column left">
         <h2>Pregunta Aleatoria:</h2>
         <button onclick="mostrarPreguntaAleatoria()">Mostrar pregunta aleatoria</button>
         <p><strong>Pregunta:</strong> <span id="pregunta-aleatoria"></span></p>
         <button onclick="toggleRespuestaAleatoria()" id="toggle-aleatoria">Mostrar respuesta</button>
         <p><strong>Respuesta:</strong> <span id="respuesta-aleatoria"></span></p>
       </div>
-      <div class="column">
+      <div class="column right">
         <h2>Preguntas:</h2>
         <ul id="preguntas">
           <!-- Mostrar preguntas existentes -->
           <script>
             preguntasRespuestas.forEach(function(item) {
               var preguntaHTML = '<li>' + item.id + '. ' + item.pregunta + '</li>';
-              var toggleButtonHTML = '<button onclick="toggleRespuesta(' + item.id + ')" id="toggle-' + item.id + '">Mostrar respuesta</button>';
               document.getElementById("preguntas").innerHTML += preguntaHTML;
-              document.getElementById("respuestas").innerHTML += toggleButtonHTML;
             });
           </script>
         </ul>
@@ -187,14 +192,18 @@
           <!-- Mostrar respuestas existentes -->
           <script>
             preguntasRespuestas.forEach(function(item) {
-              var respuestaHTML = '<li class="respuesta" id="respuesta-' + item.id + '">' + item.respuesta + '</li>';
+              var respuestaHTML = '<li><button id="toggle-' + item.id + '" onclick="toggleRespuesta(' + item.id + ')">Mostrar respuesta</button><span class="respuesta" id="respuesta-' + item.id + '">' + item.respuesta + '</span></li>';
               document.getElementById("respuestas").innerHTML += respuestaHTML;
             });
           </script>
         </ul>
         <div>
+          <h3>Agregar pregunta:</h3>
           <button onclick="agregarPregunta()">Agregar pregunta</button>
-          <input type="number" id="id-borrar" placeholder="ID a borrar">
+        </div>
+        <div>
+          <h3>Borrar pregunta:</h3>
+          <input type="number" id="id-borrar" placeholder="ID de la pregunta a borrar">
           <button onclick="borrarPregunta()">Borrar pregunta</button>
         </div>
       </div>
