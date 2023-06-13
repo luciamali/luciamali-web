@@ -177,6 +177,14 @@
         <p><strong>Respuesta:</strong> <span id="respuesta-aleatoria"></span></p>
       </div>
       <div class="column right">
+        <div>
+          <h3>Acciones:</h3>
+          <button onclick="agregarPregunta()">Agregar pregunta</button>
+        </div>
+        <div>
+          <input type="number" id="id-borrar" placeholder="ID de la pregunta a borrar">
+          <button onclick="borrarPregunta()">Borrar pregunta</button>
+        </div>
         <h2>Preguntas:</h2>
         <ul id="preguntas">
           <!-- Mostrar preguntas existentes -->
@@ -197,14 +205,6 @@
             });
           </script>
         </ul>
-        <div>
-          <h3>Acciones:</h3>
-          <button onclick="agregarPregunta()">Agregar pregunta</button>
-        </div>
-        <div>
-          <input type="number" id="id-borrar" placeholder="ID de la pregunta a borrar">
-          <button onclick="borrarPregunta()">Borrar pregunta</button>
-        </div>
       </div>
     </div>
   </div>
