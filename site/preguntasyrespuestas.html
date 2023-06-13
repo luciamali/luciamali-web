@@ -156,8 +156,8 @@ function borrarPregunta() {
   var respuestaElement = document.getElementById("respuesta-" + idBorrar);
 
   if (preguntaElement && respuestaElement) {
-    preguntaElement.parentNode.remove();
-    respuestaElement.parentNode.remove();
+    preguntaElement.parentNode.parentNode.removeChild(preguntaElement.parentNode);
+    respuestaElement.parentNode.parentNode.removeChild(respuestaElement.parentNode);
 
     preguntasRespuestas = preguntasRespuestas.filter(function(item) {
       return item.id !== parseInt(idBorrar);
@@ -165,6 +165,7 @@ function borrarPregunta() {
     localStorage.setItem("preguntasRespuestas", JSON.stringify(preguntasRespuestas));
   }
 }
+
 
 
   </script>
