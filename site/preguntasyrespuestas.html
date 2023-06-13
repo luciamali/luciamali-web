@@ -5,6 +5,7 @@
   <style>
     .respuesta {
       display: none;
+      margin-left: 2rem;
     }
   </style>
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
@@ -72,10 +73,11 @@
         localStorage.setItem("preguntasRespuestas", JSON.stringify(preguntasRespuestas));
 
         // Agregar la nueva pregunta y respuesta al DOM
-        var nuevaPreguntaHTML = '<li><button class="toggle-button" onclick="toggleRespuesta(' + nuevoId + ')" id="pregunta-' + nuevoId + '">' + nuevaPregunta + '</button></li>';
+        var nuevaPreguntaHTML = '<li><button class="toggle-button" onclick="toggleRespuesta(' + nuevoId + ')" id="pregunta-' + nuevoId + '"></button></li>';
         var nuevaRespuestaHTML = '<li class="respuesta" id="respuesta-' + nuevoId + '">' + nuevaRespuesta + '</li>';
         document.getElementById("preguntas").innerHTML += nuevaPreguntaHTML;
         document.getElementById("respuestas").innerHTML += nuevaRespuestaHTML;
+        document.getElementById("pregunta-" + nuevoId).textContent = nuevoId + '. ' + nuevaPregunta;
       }
     }
 
@@ -117,7 +119,8 @@
     <!-- Mostrar preguntas existentes -->
     <script>
       preguntasRespuestas.forEach(function(item) {
-        document.write('<li><button class="toggle-button" onclick="toggleRespuesta(' + item.id + ')" id="pregunta-' + item.id + '">' + item.pregunta + '</button></li>');
+        document.write('<li><button class="toggle-button" onclick="toggleRespuesta(' + item.id + ')" id="pregunta-' + item.id + '"></button></li>');
+        document.getElementById("pregunta-" + item.id).textContent = item.id + '. ' + item.pregunta;
       });
     </script>
   </ul>
