@@ -151,20 +151,25 @@
     }
 
 function borrarPregunta() {
-  var idBorrar = document.getElementById("id-borrar").value;
-  var preguntaElement = document.getElementById("pregunta-" + idBorrar);
-  var respuestaElement = document.getElementById("respuesta-" + idBorrar);
+  var idBorrar = parseInt(document.getElementById("id-borrar").value);
+  var preguntaIndex = preguntasRespuestas.findIndex(function(item) {
+    return item.id === idBorrar;
+  });
 
-  if (preguntaElement && respuestaElement) {
-    preguntaElement.parentNode.parentNode.removeChild(preguntaElement.parentNode);
-    respuestaElement.parentNode.parentNode.removeChild(respuestaElement.parentNode);
-
-    preguntasRespuestas = preguntasRespuestas.filter(function(item) {
-      return item.id !== parseInt(idBorrar);
-    });
+  if (preguntaIndex !== -1) {
+    preguntasRespuestas.splice(preguntaIndex, 1);
     localStorage.setItem("preguntasRespuestas", JSON.stringify(preguntasRespuestas));
+
+    var preguntaElement = document.getElementById("pregunta-" + idBorrar);
+    var respuestaElement = document.getElementById("respuesta-" + idBorrar);
+
+    if (preguntaElement && respuestaElement) {
+      preguntaElement.parentNode.parentNode.removeChild(preguntaElement.parentNode);
+      respuestaElement.parentNode.parentNode.removeChild(respuestaElement.parentNode);
+    }
   }
 }
+
 
 
 
