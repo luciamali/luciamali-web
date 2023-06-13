@@ -150,21 +150,26 @@
       }
     }
 
-function borrarPregunta() {
-  var idBorrar = document.getElementById("id-borrar").value;
-  var preguntaElement = document.getElementById("pregunta-" + idBorrar);
-  var respuestaElement = document.getElementById("respuesta-" + idBorrar);
+// Función para borrar una pregunta existente
+    function borrarPregunta() {
+      var idBorrar = document.getElementById("id-borrar").value;
+      var preguntaElement = document.getElementById("pregunta-" + idBorrar);
+      var respuestaElement = document.getElementById("respuesta-" + idBorrar);
 
-  if (preguntaElement && respuestaElement) {
-    preguntaElement.parentNode.remove();
-    respuestaElement.parentNode.remove();
+      if (preguntaElement && respuestaElement) {
+        preguntaElement.parentNode.remove();
+        respuestaElement.parentNode.remove();
 
-    preguntasRespuestas = preguntasRespuestas.filter(function(item) {
-      return item.id !== parseInt(idBorrar);
-    });
-    localStorage.setItem("preguntasRespuestas", JSON.stringify(preguntasRespuestas));
-  }
-}
+        preguntasRespuestas = preguntasRespuestas.filter(function(item) {
+          return item.id !== parseInt(idBorrar);
+        });
+        localStorage.setItem("preguntasRespuestas", JSON.stringify(preguntasRespuestas));
+      }
+
+      if (respuestaElement) {
+        respuestaElement.parentNode.remove();
+      }
+    }
 
   </script>
 </head>
