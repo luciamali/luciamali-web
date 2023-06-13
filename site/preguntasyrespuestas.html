@@ -6,79 +6,58 @@
   <script src="https://cdn.jsdelivr.net/npm/@openai/chat-gpt/dist/chat-gpt.js"></script>
   <script>
     // Diccionario de preguntas y respuestas
-    var preguntasRespuestas = {
-      "1": {
+    var preguntasRespuestas = [
+      {
         pregunta: "¿Cuál es la capital de Francia?",
-        respuesta: ""
+        respuesta: "La capital de Francia es París."
       },
-      "2": {
+      {
         pregunta: "¿Cuánto es 2 + 2?",
-        respuesta: ""
+        respuesta: "2 + 2 es igual a 4."
       },
-      "3": {
+      {
         pregunta: "¿Quién escribió 'Don Quijote de la Mancha'?",
-        respuesta: ""
+        respuesta: "Miguel de Cervantes escribió 'Don Quijote de la Mancha'."
       },
-      "4": {
+      {
         pregunta: "¿Cuál es el océano más grande del mundo?",
-        respuesta: ""
+        respuesta: "El océano más grande del mundo es el océano Pacífico."
       },
-      "5": {
+      {
         pregunta: "¿Cuántos planetas hay en el sistema solar?",
-        respuesta: ""
+        respuesta: "Hay ocho planetas en el sistema solar."
       }
-    };
+    ];
 
-    // Inicializar el modelo de ChatGPT
-    var chatGpt;
+    // Función para mostrar una pregunta y su respuesta
+    function mostrarPregunta() {
+      // Seleccionar una pregunta aleatoria
+      var preguntaSeleccionada = preguntasRespuestas[Math.floor(Math.random() * preguntasRespuestas.length)];
 
-    async function initializeChatGPT() {
-      chatGpt = new OpenAIChatGPT({
-        apiKey: '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', // Reemplaza con tu propia API key de OpenAI
-        model: 'gpt-3.5-turbo',
-        language: 'es',
-        temperature: 0.6
-      });
-      await chatGpt.ensureReady();
+      // Mostrar la pregunta y su respuesta
+      document.getElementById("pregunta").innerHTML = preguntaSeleccionada.pregunta;
+      document.getElementById("respuesta").innerHTML = preguntaSeleccionada.respuesta;
     }
 
-    // Función para seleccionar una pregunta aleatoria y obtener su respuesta
-    async function seleccionarPregunta() {
-      var keys = Object.keys(preguntasRespuestas);
-      var randomKey = keys[Math.floor(Math.random() * keys.length)];
-      var preguntaSeleccionada = preguntasRespuestas[randomKey].pregunta;
-
-      // Obtener respuesta del modelo de ChatGPT
-      var respuesta = await chatGpt.generateResponse(preguntaSeleccionada);
-      preguntasRespuestas[randomKey].respuesta = respuesta.choices[0].message.content;
-
-      // Mostrar pregunta y respuesta
-      document.getElementById("pregunta").innerHTML = preguntaSeleccionada;
-      document.getElementById("respuesta").innerHTML = respuesta.choices[0].message.content;
-    }
-
-    // Función para agregar una pregunta al diccionario
+    // Función para agregar una pregunta y su respuesta al diccionario
     function agregarPregunta() {
       var nuevaPregunta = prompt("Ingrese una nueva pregunta:");
-      if (nuevaPregunta) {
-        var keys = Object.keys(preguntasRespuestas);
-        var newKey = (Math.max(...keys.map(Number)) + 1).toString();
-        preguntasRespuestas[newKey] = {
+      var nuevaRespuesta = prompt("Ingrese la respuesta a la pregunta:");
+
+      if (nuevaPregunta && nuevaRespuesta) {
+        preguntasRespuestas.push({
           pregunta: nuevaPregunta,
-          respuesta: ""
-        };
+          respuesta: nuevaRespuesta
+        });
       }
     }
-
-    // Inicializar el modelo de ChatGPT al cargar la página
-    initializeChatGPT();
   </script>
 </head>
 <body>
   <h1>Selector de preguntas y respuestas</h1>
-  <button onclick="seleccionarPregunta()">Seleccionar pregunta aleatoria</button>
+  <button onclick="mostrarPregunta()">Mostrar pregunta aleatoria</button>
   <p><strong>Pregunta:</strong> <span id="pregunta"></span></p>
   <p><strong>Respuesta:</strong> <span id="respuesta"></span></p>
-  <button onclick="agregarPregunta()">Agregar nueva pregunta</button>
+  <button onclick="agregarPregunta()">Agregar nueva pregunta y respuesta</button>
 </body>
 </html>
