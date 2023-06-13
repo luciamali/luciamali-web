@@ -5,53 +5,66 @@
   <style>
     body {
       font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
       margin: 0;
       padding: 0;
-      background-color: #f1f1f1;
-    }
-
-    h1 {
-      text-align: center;
-      margin-top: 2rem;
-      color: #333;
-    }
-
-    h2 {
-      color: #555;
-      margin-top: 2rem;
     }
 
     .container {
       max-width: 800px;
-      margin: 0 auto;
-      padding: 2rem;
+      margin: 20px auto;
+      padding: 20px;
       background-color: #fff;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+      border-radius: 5px;
+    }
+
+    h1 {
+      font-size: 24px;
+      text-align: center;
+      margin-top: 0;
+    }
+
+    h2 {
+      font-size: 20px;
+      margin-top: 20px;
     }
 
     button {
-      font-family: Arial, sans-serif;
-      font-size: 14px;
+      background-color: #007bff;
       color: #fff;
-      background-color: #333;
       border: none;
-      padding: 8px 16px;
-      border-radius: 4px;
+      padding: 10px 20px;
+      font-size: 16px;
       cursor: pointer;
+      border-radius: 5px;
+      margin-top: 10px;
     }
 
     button:hover {
-      background-color: #555;
+      background-color: #0056b3;
     }
 
-    p {
-      margin-bottom: 1rem;
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .preguntas-list {
+      overflow-y: auto;
+      max-height: 400px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 10px;
+    }
+
+    .preguntas-list li {
+      margin-bottom: 10px;
     }
 
     .respuesta {
       display: none;
-      margin-left: 2rem;
     }
   </style>
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
@@ -62,14 +75,16 @@
     // Función para mostrar u ocultar la respuesta de la pregunta aleatoria
     function toggleRespuestaAleatoria() {
       var respuestaElement = document.getElementById("respuesta-aleatoria");
-      var toggleButton = document.getElementById("toggle-aleatoria");
-      if (respuestaElement && toggleButton) {
+      var iconoElement = document.getElementById("icono-respuesta-aleatoria");
+      if (respuestaElement && iconoElement) {
         if (respuestaElement.style.display === "none") {
           respuestaElement.style.display = "block";
-          toggleButton.textContent = "Ocultar respuesta";
+          iconoElement.classList.remove("fa-lightbulb");
+          iconoElement.classList.add("fa-lightbulb-on");
         } else {
           respuestaElement.style.display = "none";
-          toggleButton.textContent = "Mostrar respuesta";
+          iconoElement.classList.remove("fa-lightbulb-on");
+          iconoElement.classList.add("fa-lightbulb");
         }
       }
     }
@@ -79,24 +94,27 @@
       var randomIndex = Math.floor(Math.random() * preguntasRespuestas.length);
       var randomPregunta = preguntasRespuestas[randomIndex];
       if (randomPregunta) {
-        document.getElementById("pregunta-aleatoria").textContent = randomPregunta.pregunta;
-        document.getElementById("respuesta-aleatoria").textContent = randomPregunta.respuesta;
+        document.getElementById("pregunta-aleatoria").innerHTML = randomPregunta.pregunta;
+        document.getElementById("respuesta-aleatoria").innerHTML = randomPregunta.respuesta;
         document.getElementById("respuesta-aleatoria").style.display = "none";
-        document.getElementById("toggle-aleatoria").textContent = "Mostrar respuesta";
+        document.getElementById("icono-respuesta-aleatoria").classList.remove("fa-lightbulb-on");
+        document.getElementById("icono-respuesta-aleatoria").classList.add("fa-lightbulb");
       }
     }
 
     // Función para mostrar u ocultar la respuesta de una pregunta de la lista
     function toggleRespuesta(id) {
       var respuestaElement = document.getElementById("respuesta-" + id);
-      var toggleButton = document.getElementById("toggle-" + id);
-      if (respuestaElement && toggleButton) {
+      var iconoElement = document.getElementById("icono-respuesta-" + id);
+      if (respuestaElement && iconoElement) {
         if (respuestaElement.style.display === "none") {
           respuestaElement.style.display = "block";
-          toggleButton.textContent = "Ocultar respuesta";
+          iconoElement.classList.remove("fa-lightbulb");
+          iconoElement.classList.add("fa-lightbulb-on");
         } else {
           respuestaElement.style.display = "none";
-          toggleButton.textContent = "Mostrar respuesta";
+          iconoElement.classList.remove("fa-lightbulb-on");
+          iconoElement.classList.add("fa-lightbulb");
         }
       }
     }
@@ -119,9 +137,7 @@
         localStorage.setItem("preguntasRespuestas", JSON.stringify(preguntasRespuestas));
 
         // Agregar la nueva pregunta y respuesta al DOM
-        var nuevaPreguntaHTML = '<li>' + nuevoId + '. ' + nuevaPregunta + '</li>';
         var nuevaRespuestaHTML = '<li class="respuesta" id="respuesta-' + nuevoId + '">' + nuevaRespuesta + '</li>';
-        document.getElementById("preguntas").innerHTML += nuevaPreguntaHTML;
         document.getElementById("respuestas").innerHTML += nuevaRespuestaHTML;
       }
     }
@@ -139,16 +155,17 @@
       localStorage.setItem("preguntasRespuestas", JSON.stringify(preguntasRespuestas));
 
       // Remover la pregunta y respuesta del DOM
-      var preguntaElement = document.getElementById("pregunta-" + idBorrar);
       var respuestaElement = document.getElementById("respuesta-" + idBorrar);
-
-      if (preguntaElement) {
-        preguntaElement.remove();
-      }
 
       if (respuestaElement) {
         respuestaElement.remove();
       }
+    }
+
+    // Función para generar una representación en JSON de las preguntas y respuestas
+    function generarJSON() {
+      var preguntasJSON = JSON.stringify(preguntasRespuestas, null, 2);
+      document.getElementById("preguntas-json").innerHTML = preguntasJSON;
     }
   </script>
 </head>
@@ -158,31 +175,25 @@
     <h2>Pregunta Aleatoria:</h2>
     <button onclick="mostrarPreguntaAleatoria()">Mostrar pregunta aleatoria</button>
     <p><strong>Pregunta:</strong> <span id="pregunta-aleatoria"></span></p>
-    <button onclick="toggleRespuestaAleatoria()" id="toggle-aleatoria">Mostrar respuesta</button>
-    <p><strong>Respuesta:</strong> <span id="respuesta-aleatoria"></span></p>
-    <h2>Preguntas:</h2>
-    <ul id="preguntas">
-      <!-- Mostrar preguntas existentes -->
-      <script>
-        preguntasRespuestas.forEach(function(item) {
-          var preguntaHTML = '<li>' + item.id + '. ' + item.pregunta + '</li>';
-          document.getElementById("preguntas").innerHTML += preguntaHTML;
-        });
-      </script>
-    </ul>
-    <h2>Respuestas:</h2>
-    <ul id="respuestas">
-      <!-- Mostrar respuestas ocultas -->
-      <script>
-        preguntasRespuestas.forEach(function(item) {
-          var respuestaHTML = '<li class="respuesta" id="respuesta-' + item.id + '">' + item.respuesta + '</li>';
-          document.getElementById("respuestas").innerHTML += respuestaHTML;
-        });
-      </script>
-    </ul>
+    <button onclick="toggleRespuestaAleatoria()"><i id="icono-respuesta-aleatoria" class="fas fa-lightbulb"></i></button>
+    <p><strong>Respuesta:</strong></p>
+    <p id="respuesta-aleatoria"></p>
+
+    <h2>Lista de Preguntas:</h2>
+    <div class="preguntas-list">
+      <ul id="respuestas"></ul>
+    </div>
+
+    <h2>Agregar Nueva Pregunta:</h2>
     <button onclick="agregarPregunta()">Agregar pregunta</button>
-    <input type="number" id="id-borrar" placeholder="ID de la pregunta a borrar">
+
+    <h2>Borrar Pregunta:</h2>
+    <input type="number" id="id-borrar" placeholder="Ingrese el ID de la pregunta a borrar">
     <button onclick="borrarPregunta()">Borrar pregunta</button>
+
+    <h2>JSON de Preguntas y Respuestas:</h2>
+    <button onclick="generarJSON()">Generar JSON</button>
+    <pre id="preguntas-json"></pre>
   </div>
 </body>
 </html>
