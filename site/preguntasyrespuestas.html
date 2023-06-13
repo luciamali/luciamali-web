@@ -222,7 +222,7 @@
           <script>
             preguntasRespuestas.forEach(function(item) {
               var preguntaHTML = '<li>' + item.id + '. ' + item.pregunta + '</li>';
-              var respuestaHTML = '<li><button id="toggle-' + item.id + '" onclick="toggleRespuesta(' + item.id + ')">Mostrar respuesta</button><span class="respuesta" id="respuesta-' + item.id + '">' + item.respuesta + '</span></li>';
+              var respuestaHTML = item.id + '" onclick="toggleRespuesta(' + item.id + ')">Mostrar respuesta</button><span class="respuesta" id="respuesta-' + item.id + '">' + item.respuesta + '</span></li>';
               document.getElementById("preguntas-respuestas").innerHTML += preguntaHTML + respuestaHTML;
             });
           </script>
