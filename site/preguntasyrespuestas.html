@@ -28,18 +28,6 @@
       background-color: #fff;
       border-radius: 8px;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-      display: flex;
-      flex-direction: column;
-    }
-
-    .columns {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-    }
-
-    .column {
-      flex-basis: 45%;
     }
 
     button {
@@ -66,9 +54,20 @@
       margin-left: 2rem;
     }
 
+    .column {
+      width: 50%;
+      float: left;
+    }
+
     .right-align {
+      text-align: right;
+    }
+
+    .action-buttons {
       display: flex;
       justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 1rem;
     }
   </style>
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
@@ -172,42 +171,39 @@
 <body>
   <div class="container">
     <h1>Selector de preguntas y respuestas</h1>
-    <div class="columns">
-      <div class="column">
-        <h2>Pregunta Aleatoria:</h2>
-        <button onclick="mostrarPreguntaAleatoria()">Mostrar pregunta aleatoria</button>
-        <p><strong>Pregunta:</strong> <span id="pregunta-aleatoria"></span></p>
-        <button onclick="toggleRespuestaAleatoria()" id="toggle-aleatoria">Mostrar respuesta</button>
-        <p><strong>Respuesta:</strong> <span id="respuesta-aleatoria"></span></p>
-      </div>
-      <div class="column">
-        <h2>Preguntas:</h2>
-        <ul id="preguntas">
-          <!-- Mostrar preguntas existentes -->
-          <script>
-            preguntasRespuestas.forEach(function(item) {
-              var preguntaHTML = '<li>' + item.id + '. ' + item.pregunta + '</li>';
-              document.getElementById("preguntas").innerHTML += preguntaHTML;
-            });
-          </script>
-        </ul>
-      </div>
+    <div class="column">
+      <h2>Pregunta Aleatoria:</h2>
+      <button onclick="mostrarPreguntaAleatoria()">Mostrar pregunta aleatoria</button>
+      <p><strong>Pregunta:</strong> <span id="pregunta-aleatoria"></span></p>
+      <button onclick="toggleRespuestaAleatoria()" id="toggle-aleatoria">Mostrar respuesta</button>
+      <p><strong>Respuesta:</strong> <span id="respuesta-aleatoria"></span></p>
     </div>
-    <h2>Respuestas:</h2>
-    <ul id="respuestas">
-      <!-- Mostrar respuestas existentes -->
-      <script>
-        preguntasRespuestas.forEach(function(item) {
-          var respuestaHTML = '<li class="respuesta" id="respuesta-' + item.id + '">' + item.respuesta + '</li>';
-          document.getElementById("respuestas").innerHTML += respuestaHTML;
-        });
-      </script>
-    </ul>
-    <div class="right-align">
-      <h2>Acciones:</h2>
-      <input type="number" id="id-borrar" placeholder="ID de pregunta a borrar">
-      <button onclick="borrarPregunta()">Borrar pregunta</button>
-      <button onclick="agregarPregunta()">Agregar pregunta</button>
+    <div class="column">
+      <h2>Preguntas:</h2>
+      <ul id="preguntas">
+        <!-- Mostrar preguntas existentes -->
+        <script>
+          preguntasRespuestas.forEach(function(item) {
+            var preguntaHTML = '<li>' + item.id + '. ' + item.pregunta + '</li>';
+            document.getElementById("preguntas").innerHTML += preguntaHTML;
+          });
+        </script>
+      </ul>
+      <h2>Respuestas:</h2>
+      <ul id="respuestas">
+        <!-- Mostrar respuestas existentes -->
+        <script>
+          preguntasRespuestas.forEach(function(item) {
+            var respuestaHTML = '<li class="respuesta" id="respuesta-' + item.id + '">' + item.respuesta + '</li>';
+            document.getElementById("respuestas").innerHTML += respuestaHTML;
+          });
+        </script>
+      </ul>
+      <div class="action-buttons">
+        <button onclick="agregarPregunta()">Agregar pregunta</button>
+        <input type="text" id="id-borrar" placeholder="ID">
+        <button onclick="borrarPregunta()">Borrar pregunta</button>
+      </div>
     </div>
   </div>
 </body>
