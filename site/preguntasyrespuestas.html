@@ -5,103 +5,68 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f1f1f1;
-    }
-
-    h1 {
-      text-align: center;
-      margin-top: 2rem;
-      color: #333;
-    }
-
-    h2 {
-      color: #555;
-      margin-top: 2rem;
-    }
-    .search-container {
-      margin-bottom: 1rem;
-    }
-
-    .search-container input[type="text"] {
-      width: 100%;
-      padding: 0.5rem;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      box-sizing: border-box;
     }
 
     .container {
       max-width: 800px;
       margin: 0 auto;
-      padding: 2rem;
-      background-color: #fff;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      padding: 20px;
     }
 
     .columns {
       display: flex;
+      gap: 20px;
     }
 
     .column {
       flex: 1;
     }
 
-    .column.left {
-      margin-right: 2rem;
-    }
-
     button {
-      font-family: Arial, sans-serif;
-      font-size: 10px;
-      color: #fff;
-      background-color: #333;
-      border: none;
-      padding: 4px 10px;
-      border-radius: 4px;
-      cursor: pointer;
-      float: right;
+      margin-bottom: 10px;
     }
 
-    button:hover {
-      background-color: #555;
+    .search-container {
+      margin-bottom: 10px;
     }
 
-    p {
-      margin-bottom: 1rem;
+    input[type="text"],
+    input[type="number"] {
+      padding: 5px;
+      font-size: 14px;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .reducir-texto {
+      font-size: 14px;
     }
 
     .respuesta {
-      display: none;
-      margin-left: 2rem;
+      margin-left: 10px;
     }
   </style>
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   <script>
-    // Obtener las preguntas y respuestas del almacenamiento local o utilizar un arreglo vacío si no hay datos guardados
     var preguntasRespuestas = JSON.parse(localStorage.getItem("preguntasRespuestas")) || [];
 
+    // Función para buscar preguntas en la lista
     function buscarPreguntas() {
-      var searchTerm = document.getElementById("search-input").value.toLowerCase();
-      var preguntasRespuestasContainer = document.getElementById("preguntas-respuestas");
-      var preguntasRespuestasItems = preguntasRespuestasContainer.getElementsByTagName("li");
+      var input = document.getElementById("search-input");
+      var filter = input.value.toUpperCase();
+      var preguntas = document.getElementById("preguntas-respuestas").getElementsByTagName("li");
 
-      for (var i = 0; i < preguntasRespuestasItems.length; i++) {
-        var preguntaRespuestaItem = preguntasRespuestasItems[i];
-        var preguntaText = preguntaRespuestaItem.innerText.toLowerCase();
-
-        if (preguntaText.includes(searchTerm)) {
-          preguntaRespuestaItem.style.display = "block";
-        } else {
-          preguntaRespuestaItem.style.display = "none";
-        }
+      for (var i = 0; i < preguntas.length; i++) {
+        var pregunta = preguntas[i];
+        var preguntaTexto = pregunta.textContent || pregunta.innerText;
+        pregunta.style.display = preguntaTexto.toUpperCase().indexOf(filter) > -1 ? "block" : "none";
       }
     }
-    
-    
-    // Función para mostrar u ocultar la respuesta de la pregunta aleatoria
+
+    // Función para mostrar u ocultar la respuesta aleatoria
     function toggleRespuestaAleatoria() {
       var respuestaElement = document.getElementById("respuesta-aleatoria");
       var toggleButton = document.getElementById("toggle-aleatoria");
@@ -143,49 +108,45 @@
       }
     }
 
-    // Función para agregar una pregunta y su respuesta al diccionario
+    // Función para agregar una pregunta nueva
     function agregarPregunta() {
-      var nuevaPregunta = prompt("Ingrese una nueva pregunta:");
-      var nuevaRespuesta = prompt("Ingrese la respuesta a la pregunta:");
+      var preguntaInput = prompt("Ingrese una nueva pregunta:");
+      var respuestaInput = prompt("Ingrese la respuesta para la pregunta:");
 
-      if (nuevaPregunta && nuevaRespuesta) {
-        var nuevoId = preguntasRespuestas.length + 1;
-
-        preguntasRespuestas.push({
-          id: nuevoId,
-          pregunta: nuevaPregunta,
-          respuesta: nuevaRespuesta
-        });
-
-        // Guardar las preguntas y respuestas actualizadas en el almacenamiento local
+      if (preguntaInput && respuestaInput) {
+        var id = preguntasRespuestas.length + 1;
+        var nuevaPregunta = {
+          id: id,
+          pregunta: preguntaInput,
+          respuesta: respuestaInput
+        };
+        preguntasRespuestas.push(nuevaPregunta);
         localStorage.setItem("preguntasRespuestas", JSON.stringify(preguntasRespuestas));
 
-        // Agregar la nueva pregunta y respuesta al DOM
-        var nuevaPreguntaHTML = '<li>' + nuevoId + '. ' + nuevaPregunta + '</li>';
-        var nuevaRespuestaHTML = '<li><button id="toggle-' + nuevoId + '" onclick="toggleRespuesta(' + nuevoId + ')">Mostrar respuesta</button><span class="respuesta" id="respuesta-' + nuevoId + '">' + nuevaRespuesta + '</span></li>';
-        document.getElementById("preguntas").innerHTML += nuevaPreguntaHTML;
-        document.getElementById("respuestas").innerHTML += nuevaRespuestaHTML;
+        var preguntaHTML = '<li class="reducir-texto">' + id + '. ' + preguntaInput + '</li>';
+        var respuestaHTML = '<li><button id="toggle-' + id + '" onclick="toggleRespuesta(' + id + ')">Mostrar respuesta</button><span class="respuesta" id="respuesta-' + id + '">' + respuestaInput + '</span></li>';
+
+        var preguntasRespuestasElement = document.getElementById("preguntas-respuestas");
+        preguntasRespuestasElement.innerHTML += preguntaHTML + respuestaHTML;
+
+        document.getElementById("search-input").value = "";
       }
     }
 
-    // Función para borrar una pregunta y su respuesta del diccionario
+    // Función para borrar una pregunta existente
     function borrarPregunta() {
-      var idBorrar = parseInt(document.getElementById("id-borrar").value);
-
-      // Filtrar las preguntas y respuestas para obtener el nuevo arreglo sin la pregunta a borrar
-      preguntasRespuestas = preguntasRespuestas.filter(function(item) {
-        return item.id !== idBorrar;
-      });
-
-      // Guardar las preguntas y respuestas actualizadas en el almacenamiento local
-      localStorage.setItem("preguntasRespuestas", JSON.stringify(preguntasRespuestas));
-
-      // Remover la pregunta y respuesta del DOM
+      var idBorrar = document.getElementById("id-borrar").value;
       var preguntaElement = document.getElementById("pregunta-" + idBorrar);
       var respuestaElement = document.getElementById("respuesta-" + idBorrar);
 
-      if (preguntaElement) {
-        preguntaElement.remove();
+      if (preguntaElement && respuestaElement) {
+        preguntaElement.parentNode.remove();
+        respuestaElement.parentNode.remove();
+
+        preguntasRespuestas = preguntasRespuestas.filter(function(item) {
+          return item.id !== parseInt(idBorrar);
+        });
+        localStorage.setItem("preguntasRespuestas", JSON.stringify(preguntasRespuestas));
       }
 
       if (respuestaElement) {
@@ -221,8 +182,8 @@
           <!-- Mostrar preguntas y respuestas existentes -->
           <script>
             preguntasRespuestas.forEach(function(item) {
-              var preguntaHTML = '<li>' + item.id + '. ' + item.pregunta + '</li>';
-              var respuestaHTML = item.id + '" onclick="toggleRespuesta(' + item.id + ')">Mostrar respuesta</button><span class="respuesta" id="respuesta-' + item.id + '">' + item.respuesta + '</span></li>';
+              var preguntaHTML = '<li class="reducir-texto">' + item.id + '. ' + item.pregunta + '</li>';
+              var respuestaHTML = '<li><span class="respuesta" id="respuesta-' + item.id + '">' + item.respuesta + '</span></li>';
               document.getElementById("preguntas-respuestas").innerHTML += preguntaHTML + respuestaHTML;
             });
           </script>
