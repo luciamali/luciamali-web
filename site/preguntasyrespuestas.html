@@ -20,6 +20,17 @@
       color: #555;
       margin-top: 2rem;
     }
+    .search-container {
+      margin-bottom: 1rem;
+    }
+
+    .search-container input[type="text"] {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
 
     .container {
       max-width: 800px;
@@ -66,24 +77,30 @@
       display: none;
       margin-left: 2rem;
     }
-
-    .search-container {
-      margin-bottom: 1rem;
-    }
-
-    #search-input {
-      padding: 4px;
-      width: 100%;
-      box-sizing: border-box;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
   </style>
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   <script>
     // Obtener las preguntas y respuestas del almacenamiento local o utilizar un arreglo vacío si no hay datos guardados
     var preguntasRespuestas = JSON.parse(localStorage.getItem("preguntasRespuestas")) || [];
 
+    function buscarPreguntas() {
+      var searchTerm = document.getElementById("search-input").value.toLowerCase();
+      var preguntasRespuestasContainer = document.getElementById("preguntas-respuestas");
+      var preguntasRespuestasItems = preguntasRespuestasContainer.getElementsByTagName("li");
+
+      for (var i = 0; i < preguntasRespuestasItems.length; i++) {
+        var preguntaRespuestaItem = preguntasRespuestasItems[i];
+        var preguntaText = preguntaRespuestaItem.innerText.toLowerCase();
+
+        if (preguntaText.includes(searchTerm)) {
+          preguntaRespuestaItem.style.display = "block";
+        } else {
+          preguntaRespuestaItem.style.display = "none";
+        }
+      }
+    }
+    
+    
     // Función para mostrar u ocultar la respuesta de la pregunta aleatoria
     function toggleRespuestaAleatoria() {
       var respuestaElement = document.getElementById("respuesta-aleatoria");
@@ -175,22 +192,6 @@
         respuestaElement.parentNode.remove();
       }
     }
-
-    // Función para buscar preguntas por término
-    function buscarPreguntas() {
-      var searchTerm = document.getElementById("search-input").value.toLowerCase();
-
-      var preguntas = document.getElementsByClassName("pregunta");
-      for (var i = 0; i < preguntas.length; i++) {
-        var pregunta = preguntas[i];
-        var preguntaText = pregunta.textContent.toLowerCase();
-        if (preguntaText.includes(searchTerm)) {
-          pregunta.style.display = "block";
-        } else {
-          pregunta.style.display = "none";
-        }
-      }
-    }
   </script>
 </head>
 <body>
@@ -200,24 +201,30 @@
       <div class="column left">
         <h2>Pregunta Aleatoria:</h2>
         <button onclick="mostrarPreguntaAleatoria()">Mostrar pregunta aleatoria</button>
-        <p id="pregunta-aleatoria"></p>
-        <p><button id="toggle-aleatoria" onclick="toggleRespuestaAleatoria()">Mostrar respuesta</button></p>
-        <p class="respuesta" id="respuesta-aleatoria"></p>
+        <p><strong>Pregunta:</strong> <span id="pregunta-aleatoria"></span></p>
+        <button onclick="toggleRespuestaAleatoria()" id="toggle-aleatoria">Mostrar respuesta</button>
+        <p><strong>Respuesta:</strong> <span id="respuesta-aleatoria"></span></p>
       </div>
       <div class="column right">
-        <h2>Preguntas:</h2>
-        <div class="search-container">
-          <input type="text" id="search-input" onkeyup="buscarPreguntas()" placeholder="Buscar preguntas...">
+        <div>
+          <h3>Acciones:</h3>
+          <button onclick="agregarPregunta()">Agregar pregunta</button>
         </div>
-        <ul id="preguntas"></ul>
-        <h2>Respuestas:</h2>
-        <ul id="respuestas"></ul>
-        <h3>Agregar nueva pregunta:</h3>
-        <button onclick="agregarPregunta()"><i class="fas fa-plus"></i> Agregar pregunta</button>
-        <h3>Borrar pregunta:</h3>
-        <p>Ingrese el ID de la pregunta a borrar:</p>
-        <input type="number" id="id-borrar">
-        <button onclick="borrarPregunta()"><i class="fas fa-trash"></i> Borrar pregunta</button>
+        <div>
+          <input type="number" id="id-borrar" placeholder="ID de la pregunta a borrar">
+          <button onclick="borrarPregunta()">Borrar pregunta</button>
+        </div>
+        <h2>Preguntas y Respuestas:</h2>
+        <ul id="preguntas-respuestas">
+          <!-- Mostrar preguntas y respuestas existentes -->
+          <script>
+            preguntasRespuestas.forEach(function(item) {
+              var preguntaHTML = '<li>' + item.id + '. ' + item.pregunta + '</li>';
+              var respuestaHTML = '<li><button id="toggle-' + item.id + '" onclick="toggleRespuesta(' + item.id + ')">Mostrar respuesta</button><span class="respuesta" id="respuesta-' + item.id + '">' + item.respuesta + '</span></li>';
+              document.getElementById("preguntas-respuestas").innerHTML += preguntaHTML + respuestaHTML;
+            });
+          </script>
+        </ul>
       </div>
     </div>
   </div>
