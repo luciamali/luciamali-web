@@ -28,20 +28,14 @@
       var randomIndex = Math.floor(Math.random() * preguntasRespuestas.length);
       var randomPregunta = preguntasRespuestas[randomIndex];
       if (randomPregunta) {
-        document.getElementById("pregunta").innerHTML = randomPregunta.pregunta;
-        toggleRespuesta(randomPregunta.id);
+        document.getElementById("pregunta-aleatoria").innerHTML = randomPregunta.pregunta;
+        document.getElementById("respuesta-aleatoria").innerHTML = randomPregunta.respuesta;
       }
     }
 
     // Función para mostrar la respuesta de la pregunta actual
-    function mostrarRespuesta() {
-      var preguntaActual = document.getElementById("pregunta").innerHTML;
-      var preguntaSeleccionada = preguntasRespuestas.find(function(item) {
-        return item.pregunta === preguntaActual;
-      });
-      if (preguntaSeleccionada) {
-        toggleRespuesta(preguntaSeleccionada.id);
-      }
+    function mostrarRespuesta(id) {
+      toggleRespuesta(id);
     }
 
     // Función para agregar una pregunta y su respuesta al diccionario
@@ -62,7 +56,7 @@
         localStorage.setItem("preguntasRespuestas", JSON.stringify(preguntasRespuestas));
 
         // Agregar la nueva pregunta y respuesta al DOM
-        var nuevaPreguntaHTML = '<li><button onclick="toggleRespuesta(' + nuevoId + ')">' + nuevoId + '. ' + nuevaPregunta + '</button></li>';
+        var nuevaPreguntaHTML = '<li><button onclick="mostrarRespuesta(' + nuevoId + ')" id="pregunta-' + nuevoId + '">' + nuevoId + '. ' + nuevaPregunta + '</button></li>';
         var nuevaRespuestaHTML = '<li class="respuesta" id="respuesta-' + nuevoId + '">' + nuevaRespuesta + '</li>';
         document.getElementById("preguntas").innerHTML += nuevaPreguntaHTML;
         document.getElementById("respuestas").innerHTML += nuevaRespuestaHTML;
@@ -102,12 +96,11 @@
     <!-- Mostrar preguntas existentes -->
     <script>
       preguntasRespuestas.forEach(function(item) {
-        document.write('<li><button onclick="toggleRespuesta(' + item.id + ')" id="pregunta-' + item.id + '">' + item.id + '. ' + item.pregunta + '</button></li>');
+        document.write('<li><button onclick="mostrarRespuesta(' + item.id + ')" id="pregunta-' + item.id + '">' + item.id + '. ' + item.pregunta + '</button></li>');
       });
     </script>
   </ul>
   <h2>Respuestas:</h2>
-  <p><strong>Pregunta:</strong> <span id="pregunta"></span></p>
   <ul id="respuestas">
     <!-- Mostrar respuestas ocultas -->
     <script>
@@ -120,8 +113,9 @@
   <h2>Borrar pregunta:</h2>
   <input type="text" id="id-borrar">
   <button onclick="borrarPregunta()">Borrar pregunta</button>
-  <h2>Otras acciones:</h2>
+  <h2>Pregunta Aleatoria:</h2>
   <button onclick="mostrarPreguntaAleatoria()">Mostrar pregunta aleatoria</button>
-  <button onclick="mostrarRespuesta()">Mostrar respuesta de la pregunta actual</button>
+  <p><strong>Pregunta:</strong> <span id="pregunta-aleatoria"></span></p>
+  <p><strong>Respuesta:</strong> <span id="respuesta-aleatoria"></span></p>
 </body>
 </html>
