@@ -5,12 +5,21 @@
   <style>
     body {
       font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
     }
 
     .container {
       max-width: 800px;
       margin: 0 auto;
       padding: 20px;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 5px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
     }
 
     .columns {
@@ -24,6 +33,17 @@
 
     button {
       margin-bottom: 10px;
+      background-color: #333;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 14px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #555;
     }
 
     .search-container {
@@ -49,6 +69,12 @@
     .respuesta {
       display: none;
       margin-left: 10px;
+      padding-top: 10px;
+      border-top: 1px solid #ccc;
+    }
+
+    .respuesta.show {
+      display: block;
     }
   </style>
   <script>
@@ -72,13 +98,8 @@
       var respuestaElement = document.getElementById("respuesta-aleatoria");
       var toggleButton = document.getElementById("toggle-aleatoria");
       if (respuestaElement && toggleButton) {
-        if (respuestaElement.style.display === "none") {
-          respuestaElement.style.display = "block";
-          toggleButton.textContent = "Ocultar respuesta";
-        } else {
-          respuestaElement.style.display = "none";
-          toggleButton.textContent = "Mostrar respuesta";
-        }
+        respuestaElement.classList.toggle("show");
+        toggleButton.textContent = respuestaElement.classList.contains("show") ? "Ocultar respuesta" : "Mostrar respuesta";
       }
     }
 
@@ -89,7 +110,7 @@
       if (randomPregunta) {
         document.getElementById("pregunta-aleatoria").textContent = randomPregunta.pregunta;
         document.getElementById("respuesta-aleatoria").textContent = randomPregunta.respuesta;
-        document.getElementById("respuesta-aleatoria").style.display = "none";
+        document.getElementById("respuesta-aleatoria").classList.remove("show");
         document.getElementById("toggle-aleatoria").textContent = "Mostrar respuesta";
       }
     }
@@ -99,13 +120,8 @@
       var respuestaElement = document.getElementById("respuesta-" + id);
       var toggleButton = document.getElementById("toggle-" + id);
       if (respuestaElement && toggleButton) {
-        if (respuestaElement.style.display === "none") {
-          respuestaElement.style.display = "block";
-          toggleButton.textContent = "Ocultar respuesta";
-        } else {
-          respuestaElement.style.display = "none";
-          toggleButton.textContent = "Mostrar respuesta";
-        }
+        respuestaElement.classList.toggle("show");
+        toggleButton.textContent = respuestaElement.classList.contains("show") ? "Ocultar respuesta" : "Mostrar respuesta";
       }
     }
 
@@ -164,7 +180,7 @@
         <button onclick="mostrarPreguntaAleatoria()">Mostrar pregunta aleatoria</button>
         <p><strong>Pregunta:</strong>  <span id="pregunta-aleatoria"></span></p>
         <button onclick="toggleRespuestaAleatoria()" id="toggle-aleatoria">Mostrar respuesta</button>
-        <p><strong>Respuesta:</strong> <span id="respuesta-aleatoria"></span></p>
+        <p><strong>Respuesta:</strong> <span id="respuesta-aleatoria" class="respuesta"></span></p>
       </div>
       <div class="column right">
         <h2>Preguntas y Respuestas:</h2>
