@@ -6,10 +6,11 @@
     .respuesta {
       display: none;
     }
-    .pregunta-button {
-      font-size: 18px;
-      padding: 10px;
-      margin-bottom: 5px;
+    .toggle-button {
+      margin-left: 2em;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
     }
   </style>
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
@@ -20,16 +21,15 @@
     // Función para mostrar u ocultar la respuesta de la pregunta aleatoria
     function toggleRespuestaAleatoria() {
       var respuestaElement = document.getElementById("respuesta-aleatoria");
-      var iconoElement = document.getElementById("icono-respuesta-aleatoria");
-      if (respuestaElement && iconoElement) {
+      var toggleButton = document.getElementById("toggle-aleatoria");
+
+      if (respuestaElement && toggleButton) {
         if (respuestaElement.style.display === "none") {
           respuestaElement.style.display = "block";
-          iconoElement.classList.remove("fa-lightbulb");
-          iconoElement.classList.add("fa-lightbulb-on");
+          toggleButton.textContent = "Ocultar respuesta";
         } else {
           respuestaElement.style.display = "none";
-          iconoElement.classList.remove("fa-lightbulb-on");
-          iconoElement.classList.add("fa-lightbulb");
+          toggleButton.textContent = "Mostrar respuesta";
         }
       }
     }
@@ -42,24 +42,22 @@
         document.getElementById("pregunta-aleatoria").innerHTML = randomPregunta.pregunta;
         document.getElementById("respuesta-aleatoria").innerHTML = randomPregunta.respuesta;
         document.getElementById("respuesta-aleatoria").style.display = "none";
-        document.getElementById("icono-respuesta-aleatoria").classList.remove("fa-lightbulb-on");
-        document.getElementById("icono-respuesta-aleatoria").classList.add("fa-lightbulb");
+        document.getElementById("toggle-aleatoria").textContent = "Mostrar respuesta";
       }
     }
 
     // Función para mostrar u ocultar la respuesta de una pregunta de la lista
     function toggleRespuesta(id) {
       var respuestaElement = document.getElementById("respuesta-" + id);
-      var iconoElement = document.getElementById("icono-respuesta-" + id);
-      if (respuestaElement && iconoElement) {
+      var toggleButton = document.getElementById("toggle-" + id);
+
+      if (respuestaElement && toggleButton) {
         if (respuestaElement.style.display === "none") {
           respuestaElement.style.display = "block";
-          iconoElement.classList.remove("fa-lightbulb");
-          iconoElement.classList.add("fa-lightbulb-on");
+          toggleButton.textContent = "Ocultar respuesta";
         } else {
           respuestaElement.style.display = "none";
-          iconoElement.classList.remove("fa-lightbulb-on");
-          iconoElement.classList.add("fa-lightbulb");
+          toggleButton.textContent = "Mostrar respuesta";
         }
       }
     }
@@ -82,7 +80,7 @@
         localStorage.setItem("preguntasRespuestas", JSON.stringify(preguntasRespuestas));
 
         // Agregar la nueva pregunta y respuesta al DOM
-        var nuevaPreguntaHTML = '<li><button class="pregunta-button" onclick="toggleRespuesta(' + nuevoId + ')" id="pregunta-' + nuevoId + '"><i class="fas fa-lightbulb"></i>' + nuevaPregunta + '</button></li>';
+        var nuevaPreguntaHTML = '<li><button onclick="toggleRespuesta(' + nuevoId + ')" id="pregunta-' + nuevoId + '">' + nuevoId + '. ' + nuevaPregunta + '</button> <button class="toggle-button" id="toggle-' + nuevoId + '" onclick="toggleRespuesta(' + nuevoId + ')">Mostrar respuesta</button></li>';
         var nuevaRespuestaHTML = '<li class="respuesta" id="respuesta-' + nuevoId + '">' + nuevaRespuesta + '</li>';
         document.getElementById("preguntas").innerHTML += nuevaPreguntaHTML;
         document.getElementById("respuestas").innerHTML += nuevaRespuestaHTML;
@@ -120,14 +118,14 @@
   <h2>Pregunta Aleatoria:</h2>
   <button onclick="mostrarPreguntaAleatoria()">Mostrar pregunta aleatoria</button>
   <p><strong>Pregunta:</strong> <span id="pregunta-aleatoria"></span></p>
-  <button onclick="toggleRespuestaAleatoria()"><i id="icono-respuesta-aleatoria" class="fas fa-lightbulb"></i></button>
+  <button class="toggle-button" id="toggle-aleatoria" onclick="toggleRespuestaAleatoria()">Mostrar respuesta</button>
   <p><strong>Respuesta:</strong> <span id="respuesta-aleatoria"></span></p>
   <h2>Preguntas:</h2>
   <ul id="preguntas">
     <!-- Mostrar preguntas existentes -->
     <script>
       preguntasRespuestas.forEach(function(item) {
-        document.write('<li><button class="pregunta-button" onclick="toggleRespuesta(' + item.id + ')" id="pregunta-' + item.id + '"><i class="fas fa-lightbulb"></i>' + item.pregunta + '</button></li>');
+        document.write('<li><button onclick="toggleRespuesta(' + item.id + ')" id="pregunta-' + item.id + '">' + item.id + '. ' + item.pregunta + '</button> <button class="toggle-button" id="toggle-' + item.id + '" onclick="toggleRespuesta(' + item.id + ')">Mostrar respuesta</button></li>');
       });
     </script>
   </ul>
