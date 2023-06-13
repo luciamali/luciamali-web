@@ -12,17 +12,14 @@
     var preguntasRespuestas = JSON.parse(localStorage.getItem("preguntasRespuestas")) || [];
 
     // Función para mostrar una pregunta y su respuesta
-    function mostrarPregunta(id) {
-      var preguntaSeleccionada = preguntasRespuestas.find(function(item) {
+    function mostrarRespuesta(id) {
+      // Obtener la respuesta correspondiente al ID
+      var respuestaSeleccionada = preguntasRespuestas.find(function(item) {
         return item.id === id;
       });
 
-      // Mostrar la pregunta
-      document.getElementById("pregunta").innerHTML = preguntaSeleccionada.pregunta;
-
-      // Ocultar respuestas anteriores y mostrar la respuesta actual
-      $(".respuesta").hide();
-      $("#respuesta-" + id).show();
+      // Mostrar la respuesta
+      document.getElementById("respuesta-" + id).style.display = "block";
     }
 
     // Función para agregar una pregunta y su respuesta al diccionario
@@ -43,34 +40,36 @@
         localStorage.setItem("preguntasRespuestas", JSON.stringify(preguntasRespuestas));
 
         // Agregar la nueva pregunta y respuesta al DOM
-        var nuevaPreguntaHTML = '<li><button onclick="mostrarPregunta(' + nuevoId + ')">' + nuevoId + '. ' + nuevaPregunta + '</button></li>';
+        var nuevaPreguntaHTML = '<li><button onclick="mostrarRespuesta(' + nuevoId + ')">' + nuevoId + '. ' + nuevaPregunta + '</button></li>';
         var nuevaRespuestaHTML = '<li class="respuesta" id="respuesta-' + nuevoId + '">' + nuevaRespuesta + '</li>';
-        $("#preguntas").append(nuevaPreguntaHTML);
-        $("#respuestas").append(nuevaRespuestaHTML);
+        document.getElementById("preguntas").innerHTML += nuevaPreguntaHTML;
+        document.getElementById("respuestas").innerHTML += nuevaRespuestaHTML;
       }
     }
 
     // Función para borrar una pregunta y su respuesta del diccionario
-    function borrarPregunta(id) {
+    function borrarPregunta() {
+      var idBorrar = parseInt(document.getElementById("id-borrar").value);
+
+      // Filtrar las preguntas y respuestas para obtener el nuevo arreglo sin la pregunta a borrar
       preguntasRespuestas = preguntasRespuestas.filter(function(item) {
-        return item.id !== id;
+        return item.id !== idBorrar;
       });
 
       // Guardar las preguntas y respuestas actualizadas en el almacenamiento local
       localStorage.setItem("preguntasRespuestas", JSON.stringify(preguntasRespuestas));
 
       // Remover la pregunta y respuesta del DOM
-      $("#preguntas").find("li").each(function() {
-        if ($(this).find("button").attr("onclick") === "mostrarPregunta(" + id + ")") {
-          $(this).remove();
-        }
-      });
+      var preguntaElement = document.getElementById("pregunta-" + idBorrar);
+      var respuestaElement = document.getElementById("respuesta-" + idBorrar);
 
-      $("#respuestas").find(".respuesta").each(function() {
-        if ($(this).attr("id") === "respuesta-" + id) {
-          $(this).remove();
-        }
-      });
+      if (preguntaElement) {
+        preguntaElement.remove();
+      }
+
+      if (respuestaElement) {
+        respuestaElement.remove();
+      }
     }
   </script>
 </head>
@@ -81,12 +80,11 @@
     <!-- Mostrar preguntas existentes -->
     <script>
       preguntasRespuestas.forEach(function(item) {
-        document.write('<li><button onclick="mostrarPregunta(' + item.id + ')">' + item.id + '. ' + item.pregunta + '</button></li>');
+        document.write('<li><button onclick="mostrarRespuesta(' + item.id + ')" id="pregunta-' + item.id + '">' + item.id + '. ' + item.pregunta + '</button></li>');
       });
     </script>
   </ul>
   <h2>Respuestas:</h2>
-  <p><strong>Pregunta:</strong> <span id="pregunta"></span></p>
   <ul id="respuestas">
     <!-- Mostrar respuestas ocultas -->
     <script>
@@ -98,6 +96,6 @@
   <button onclick="agregarPregunta()">Agregar nueva pregunta y respuesta</button>
   <h2>Borrar pregunta:</h2>
   <input type="text" id="id-borrar">
-  <button onclick="borrarPregunta(parseInt(document.getElementById('id-borrar').value))">Borrar pregunta</button>
+  <button onclick="borrarPregunta()">Borrar pregunta</button>
 </body>
 </html>
