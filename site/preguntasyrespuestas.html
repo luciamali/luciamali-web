@@ -199,14 +199,13 @@
     <h1>Selector de preguntas y respuestas</h1>
     <div class="columns">
       <div class="column left">
-        <h2>Pregunta Aleatoria:</h2>
-        <p><strong>Pregunta:</strong>
         <button onclick="mostrarPreguntaAleatoria()">Mostrar pregunta aleatoria</button>
-        <span id="pregunta-aleatoria"></span></p>
+        <p><strong>Pregunta:</strong>  <span id="pregunta-aleatoria"></span></p>
         <button onclick="toggleRespuestaAleatoria()" id="toggle-aleatoria">Mostrar respuesta</button>
         <p><strong>Respuesta:</strong> <span id="respuesta-aleatoria"></span></p>
       </div>
       <div class="column right">
+        <h2>Preguntas y Respuestas:</h2>
         <div class="search-container">
           <input type="text" id="search-input" placeholder="Buscar preguntas" onkeyup="buscarPreguntas()">
         </div>
@@ -218,7 +217,6 @@
           <input type="number" id="id-borrar" placeholder="ID de la pregunta a borrar">
           <button onclick="borrarPregunta()">Borrar pregunta</button>
         </div>
-        <h2>Preguntas y Respuestas:</h2>
         <ul id="preguntas-respuestas">
           <!-- Mostrar preguntas y respuestas existentes -->
           <script>
