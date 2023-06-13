@@ -28,10 +28,29 @@
       background-color: #fff;
       border-radius: 8px;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: row;
     }
 
-    button {
-      font-family: Arial, sans-serif;
+    .column {
+      flex: 1;
+    }
+
+    .preguntas {
+      margin-top: 2rem;
+    }
+
+    .preguntas ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .preguntas li {
+      margin-bottom: 0.5rem;
+    }
+
+    .preguntas li button {
       font-size: 14px;
       color: #fff;
       background-color: #333;
@@ -41,36 +60,16 @@
       cursor: pointer;
     }
 
-    button:hover {
+    .preguntas li button:hover {
       background-color: #555;
-    }
-
-    p {
-      margin-bottom: 1rem;
     }
 
     .respuesta {
       display: none;
       margin-left: 2rem;
     }
-
-    .dataframe {
-      margin-left: 2rem;
-    }
-
-    .dataframe th {
-      text-align: left;
-      font-weight: normal;
-      background-color: #eee;
-      padding: 8px;
-    }
-
-    .dataframe td {
-      padding: 8px;
-    }
   </style>
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pandas/1.1.5/pandas.min.js"></script>
   <script>
     // Obtener las preguntas y respuestas del almacenamiento local o utilizar un arreglo vacío si no hay datos guardados
     var preguntasRespuestas = JSON.parse(localStorage.getItem("preguntasRespuestas")) || [];
@@ -166,57 +165,43 @@
         respuestaElement.remove();
       }
     }
-
-    // Función para convertir las preguntas y respuestas en un DataFrame de Pandas
-    function convertirADataFrame() {
-      var data = preguntasRespuestas.map(function(item) {
-        return [item.id, item.pregunta, item.respuesta];
-      });
-
-      var columns = ['ID', 'Pregunta', 'Respuesta'];
-
-      var df = new pandas.DataFrame(data, { columns: columns });
-
-      var dataframeHTML = df.to_html();
-
-      document.getElementById("dataframe-container").innerHTML = dataframeHTML;
-    }
   </script>
 </head>
 <body>
   <div class="container">
-    <h1>Selector de preguntas y respuestas</h1>
-    <h2>Pregunta Aleatoria:</h2>
-    <button onclick="mostrarPreguntaAleatoria()">Mostrar pregunta aleatoria</button>
-    <p><strong>Pregunta:</strong> <span id="pregunta-aleatoria"></span></p>
-    <button onclick="toggleRespuestaAleatoria()" id="toggle-aleatoria">Mostrar respuesta</button>
-    <p><strong>Respuesta:</strong> <span id="respuesta-aleatoria"></span></p>
-    <h2>Preguntas:</h2>
-    <ul id="preguntas">
-      <!-- Mostrar preguntas existentes -->
-      <script>
-        preguntasRespuestas.forEach(function(item) {
-          var preguntaHTML = '<li>' + item.id + '. ' + item.pregunta + '</li>';
-          document.getElementById("preguntas").innerHTML += preguntaHTML;
-        });
-      </script>
-    </ul>
-    <h2>Respuestas:</h2>
-    <ul id="respuestas">
-      <!-- Mostrar respuestas ocultas -->
-      <script>
-        preguntasRespuestas.forEach(function(item) {
-          var respuestaHTML = '<li class="respuesta" id="respuesta-' + item.id + '">' + item.respuesta + '</li>';
-          document.getElementById("respuestas").innerHTML += respuestaHTML;
-        });
-      </script>
-    </ul>
-    <button onclick="agregarPregunta()">Agregar pregunta</button>
-    <input type="number" id="id-borrar" placeholder="ID de la pregunta a borrar">
-    <button onclick="borrarPregunta()">Borrar pregunta</button>
-    <h2>Dataframe de Preguntas y Respuestas:</h2>
-    <div id="dataframe-container" class="dataframe"></div>
-    <button onclick="convertirADataFrame()">Mostrar como DataFrame</button>
+    <div class="column">
+      <h1>Selector de preguntas y respuestas</h1>
+      <h2>Pregunta Aleatoria:</h2>
+      <button onclick="mostrarPreguntaAleatoria()">Mostrar pregunta aleatoria</button>
+      <p><strong>Pregunta:</strong> <span id="pregunta-aleatoria"></span></p>
+      <button onclick="toggleRespuestaAleatoria()" id="toggle-aleatoria">Mostrar respuesta</button>
+      <p><strong>Respuesta:</strong> <span id="respuesta-aleatoria"></span></p>
+      <h2>Preguntas:</h2>
+      <ul id="preguntas" class="preguntas">
+        <!-- Mostrar preguntas existentes -->
+        <script>
+          preguntasRespuestas.forEach(function(item) {
+            var preguntaHTML = '<li><button onclick="toggleRespuesta(' + item.id + ')" id="toggle-' + item.id + '">Mostrar respuesta</button> ' + item.pregunta + '</li>';
+            document.getElementById("preguntas").innerHTML += preguntaHTML;
+          });
+        </script>
+      </ul>
+      <button onclick="agregarPregunta()">Agregar pregunta</button>
+      <input type="number" id="id-borrar" placeholder="ID de la pregunta a borrar">
+      <button onclick="borrarPregunta()">Borrar pregunta</button>
+    </div>
+    <div class="column">
+      <h2>Respuestas:</h2>
+      <ul id="respuestas" class="preguntas">
+        <!-- Mostrar respuestas ocultas -->
+        <script>
+          preguntasRespuestas.forEach(function(item) {
+            var respuestaHTML = '<li class="respuesta" id="respuesta-' + item.id + '">' + item.respuesta + '</li>';
+            document.getElementById("respuestas").innerHTML += respuestaHTML;
+          });
+        </script>
+      </ul>
+    </div>
   </div>
 </body>
 </html>
