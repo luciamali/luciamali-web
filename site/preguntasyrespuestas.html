@@ -33,8 +33,8 @@
       var randomIndex = Math.floor(Math.random() * preguntasRespuestas.length);
       var randomPregunta = preguntasRespuestas[randomIndex];
       if (randomPregunta) {
-        document.getElementById("pregunta-aleatoria").innerHTML = randomPregunta.pregunta;
-        document.getElementById("respuesta-aleatoria").innerHTML = randomPregunta.respuesta;
+        document.getElementById("pregunta-aleatoria").textContent = randomPregunta.pregunta;
+        document.getElementById("respuesta-aleatoria").textContent = randomPregunta.respuesta;
         document.getElementById("respuesta-aleatoria").style.display = "none";
         document.getElementById("toggle-aleatoria").textContent = "Mostrar respuesta";
       }
@@ -73,11 +73,10 @@
         localStorage.setItem("preguntasRespuestas", JSON.stringify(preguntasRespuestas));
 
         // Agregar la nueva pregunta y respuesta al DOM
-        var nuevaPreguntaHTML = '<li><button class="toggle-button" onclick="toggleRespuesta(' + nuevoId + ')" id="pregunta-' + nuevoId + '"></button></li>';
+        var nuevaPreguntaHTML = '<li>' + nuevoId + '. <button class="toggle-button" onclick="toggleRespuesta(' + nuevoId + ')" id="pregunta-' + nuevoId + '">' + nuevaPregunta + '</button></li>';
         var nuevaRespuestaHTML = '<li class="respuesta" id="respuesta-' + nuevoId + '">' + nuevaRespuesta + '</li>';
         document.getElementById("preguntas").innerHTML += nuevaPreguntaHTML;
         document.getElementById("respuestas").innerHTML += nuevaRespuestaHTML;
-        document.getElementById("pregunta-" + nuevoId).textContent = nuevoId + '. ' + nuevaPregunta;
       }
     }
 
@@ -119,8 +118,9 @@
     <!-- Mostrar preguntas existentes -->
     <script>
       preguntasRespuestas.forEach(function(item) {
-        document.write('<li><button class="toggle-button" onclick="toggleRespuesta(' + item.id + ')" id="pregunta-' + item.id + '"></button></li>');
-        document.getElementById("pregunta-" + item.id).textContent = item.id + '. ' + item.pregunta;
+        var preguntaHTML = '<li>' + item.id + '. <button class="toggle-button" onclick="toggleRespuesta(' + item.id + ')" id="pregunta-' + item.id + '"></button></li>';
+        document.getElementById("preguntas").innerHTML += preguntaHTML;
+        document.getElementById("pregunta-" + item.id).textContent = item.pregunta;
       });
     </script>
   </ul>
@@ -129,7 +129,8 @@
     <!-- Mostrar respuestas ocultas -->
     <script>
       preguntasRespuestas.forEach(function(item) {
-        document.write('<li class="respuesta" id="respuesta-' + item.id + '">' + item.respuesta + '</li>');
+        var respuestaHTML = '<li class="respuesta" id="respuesta-' + item.id + '">' + item.respuesta + '</li>';
+        document.getElementById("respuestas").innerHTML += respuestaHTML;
       });
     </script>
   </ul>
