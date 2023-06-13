@@ -4,39 +4,53 @@
   <title>Selector de preguntas y respuestas</title>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@openai/chat-gpt/dist/chat-gpt.js"></script>
+  <style>
+    .respuesta {
+      display: none;
+    }
+  </style>
   <script>
     // Diccionario de preguntas y respuestas
     var preguntasRespuestas = [
       {
+        id: 1,
         pregunta: "¿Cuál es la capital de Francia?",
         respuesta: "La capital de Francia es París."
       },
       {
+        id: 2,
         pregunta: "¿Cuánto es 2 + 2?",
         respuesta: "2 + 2 es igual a 4."
       },
       {
+        id: 3,
         pregunta: "¿Quién escribió 'Don Quijote de la Mancha'?",
         respuesta: "Miguel de Cervantes escribió 'Don Quijote de la Mancha'."
       },
       {
+        id: 4,
         pregunta: "¿Cuál es el océano más grande del mundo?",
         respuesta: "El océano más grande del mundo es el océano Pacífico."
       },
       {
+        id: 5,
         pregunta: "¿Cuántos planetas hay en el sistema solar?",
         respuesta: "Hay ocho planetas en el sistema solar."
       }
     ];
 
     // Función para mostrar una pregunta y su respuesta
-    function mostrarPregunta() {
-      // Seleccionar una pregunta aleatoria
-      var preguntaSeleccionada = preguntasRespuestas[Math.floor(Math.random() * preguntasRespuestas.length)];
+    function mostrarPregunta(id) {
+      var preguntaSeleccionada = preguntasRespuestas.find(function(item) {
+        return item.id === id;
+      });
 
-      // Mostrar la pregunta y su respuesta
+      // Mostrar la pregunta
       document.getElementById("pregunta").innerHTML = preguntaSeleccionada.pregunta;
-      document.getElementById("respuesta").innerHTML = preguntaSeleccionada.respuesta;
+
+      // Ocultar respuestas anteriores y mostrar la respuesta actual
+      $(".respuesta").hide();
+      $("#respuesta-" + id).show();
     }
 
     // Función para agregar una pregunta y su respuesta al diccionario
@@ -45,19 +59,59 @@
       var nuevaRespuesta = prompt("Ingrese la respuesta a la pregunta:");
 
       if (nuevaPregunta && nuevaRespuesta) {
+        var nuevoId = preguntasRespuestas.length + 1;
+
         preguntasRespuestas.push({
+          id: nuevoId,
           pregunta: nuevaPregunta,
           respuesta: nuevaRespuesta
         });
+
+        // Agregar la nueva pregunta y respuesta al DOM
+        var nuevaPreguntaHTML = '<li><button onclick="mostrarPregunta(' + nuevoId + ')">' + nuevaPregunta + '</button></li>';
+        var nuevaRespuestaHTML = '<li class="respuesta" id="respuesta-' + nuevoId + '">' + nuevaRespuesta + '</li>';
+        $("#preguntas").append(nuevaPreguntaHTML);
+        $("#respuestas").append(nuevaRespuestaHTML);
       }
+    }
+
+    // Función para borrar una pregunta y su respuesta del diccionario
+    function borrarPregunta(id) {
+      preguntasRespuestas = preguntasRespuestas.filter(function(item) {
+        return item.id !== id;
+      });
+
+      // Eliminar la pregunta y respuesta del DOM
+      $("#pregunta").empty();
+      $("#respuesta-" + id).remove();
+      $("#preguntas").find("button").each(function() {
+        if ($(this).attr("onclick") === "mostrarPregunta(" + id + ")") {
+          $(this).parent().remove();
+        }
+      });
     }
   </script>
 </head>
 <body>
   <h1>Selector de preguntas y respuestas</h1>
-  <button onclick="mostrarPregunta()">Mostrar pregunta aleatoria</button>
+  <ul id="preguntas">
+    <!-- Mostrar preguntas enumeradas -->
+    <li><button onclick="mostrarPregunta(1)">1. ¿Cuál es la capital de Francia?</button></li>
+    <li><button onclick="mostrarPregunta(2)">2. ¿Cuánto es 2 + 2?</button></li>
+    <li><button onclick="mostrarPregunta(3)">3. ¿Quién escribió 'Don Quijote de la Mancha'?</button></li>
+    <li><button onclick="mostrarPregunta(4)">4. ¿Cuál es el océano más grande del mundo?</button></li>
+    <li><button onclick="mostrarPregunta(5)">5. ¿Cuántos planetas hay en el sistema solar?</button></li>
+  </ul>
   <p><strong>Pregunta:</strong> <span id="pregunta"></span></p>
-  <p><strong>Respuesta:</strong> <span id="respuesta"></span></p>
+  <ul id="respuestas">
+    <!-- Mostrar respuestas ocultas -->
+    <li class="respuesta" id="respuesta-1">La capital de Francia es París.</li>
+    <li class="respuesta" id="respuesta-2">2 + 2 es igual a 4.</li>
+    <li class="respuesta" id="respuesta-3">Miguel de Cervantes escribió 'Don Quijote de la Mancha'.</li>
+    <li class="respuesta" id="respuesta-4">El océano más grande del mundo es el océano Pacífico.</li>
+    <li class="respuesta" id="respuesta-5">Hay ocho planetas en el sistema solar.</li>
+  </ul>
   <button onclick="agregarPregunta()">Agregar nueva pregunta y respuesta</button>
+  <button onclick="borrarPregunta(prompt('Ingrese el ID de la pregunta a borrar:'))">Borrar pregunta y respuesta</button>
 </body>
 </html>
