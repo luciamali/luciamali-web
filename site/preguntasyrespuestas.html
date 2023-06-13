@@ -30,12 +30,17 @@
     };
 
     // Inicializar el modelo de ChatGPT
-    var chatGpt = new ChatGPT({
-      apiKey: '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', // Reemplaza con tu propia API key de OpenAI
-      model: 'gpt-3.5-turbo',
-      language: 'es',
-      temperature: 0.6
-    });
+    var chatGpt;
+
+    async function initializeChatGPT() {
+      chatGpt = new OpenAIChatGPT({
+        apiKey: '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', // Reemplaza con tu propia API key de OpenAI
+        model: 'gpt-3.5-turbo',
+        language: 'es',
+        temperature: 0.6
+      });
+      await chatGpt.ensureReady();
+    }
 
     // Función para seleccionar una pregunta aleatoria y obtener su respuesta
     async function seleccionarPregunta() {
@@ -44,7 +49,7 @@
       var preguntaSeleccionada = preguntasRespuestas[randomKey].pregunta;
 
       // Obtener respuesta del modelo de ChatGPT
-      var respuesta = await chatGpt.sendMessage(preguntaSeleccionada);
+      var respuesta = await chatGpt.generateResponse(preguntaSeleccionada);
       preguntasRespuestas[randomKey].respuesta = respuesta.choices[0].message.content;
 
       // Mostrar pregunta y respuesta
@@ -64,6 +69,9 @@
         };
       }
     }
+
+    // Inicializar el modelo de ChatGPT al cargar la página
+    initializeChatGPT();
   </script>
 </head>
 <body>
@@ -72,10 +80,5 @@
   <p><strong>Pregunta:</strong> <span id="pregunta"></span></p>
   <p><strong>Respuesta:</strong> <span id="respuesta"></span></p>
   <button onclick="agregarPregunta()">Agregar nueva pregunta</button>
-
-  <script>
-    // Cargar el modelo de ChatGPT
-    chatGpt.load();
-  </script>
 </body>
 </html>
