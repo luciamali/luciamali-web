@@ -22,19 +22,24 @@
     }
 
     .container {
-      display: flex;
-      justify-content: center;
       max-width: 800px;
       margin: 0 auto;
       padding: 2rem;
       background-color: #fff;
       border-radius: 8px;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .columns {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
     }
 
     .column {
-      flex: 1;
-      padding: 0 1rem;
+      flex-basis: 45%;
     }
 
     button {
@@ -59,6 +64,11 @@
     .respuesta {
       display: none;
       margin-left: 2rem;
+    }
+
+    .right-align {
+      display: flex;
+      justify-content: flex-end;
     }
   </style>
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
@@ -161,38 +171,43 @@
 </head>
 <body>
   <div class="container">
-    <div class="column">
-      <h1>Selector de preguntas y respuestas</h1>
-      <h2>Pregunta Aleatoria:</h2>
-      <button onclick="mostrarPreguntaAleatoria()">Mostrar pregunta aleatoria</button>
-      <p><strong>Pregunta:</strong> <span id="pregunta-aleatoria"></span></p>
-      <button onclick="toggleRespuestaAleatoria()" id="toggle-aleatoria">Mostrar respuesta</button>
-      <p><strong>Respuesta:</strong> <span id="respuesta-aleatoria"></span></p>
-      <button onclick="agregarPregunta()">Agregar pregunta</button>
-      <input type="number" id="id-borrar" placeholder="ID de la pregunta a borrar">
-      <button onclick="borrarPregunta()">Borrar pregunta</button>
+    <h1>Selector de preguntas y respuestas</h1>
+    <div class="columns">
+      <div class="column">
+        <h2>Pregunta Aleatoria:</h2>
+        <button onclick="mostrarPreguntaAleatoria()">Mostrar pregunta aleatoria</button>
+        <p><strong>Pregunta:</strong> <span id="pregunta-aleatoria"></span></p>
+        <button onclick="toggleRespuestaAleatoria()" id="toggle-aleatoria">Mostrar respuesta</button>
+        <p><strong>Respuesta:</strong> <span id="respuesta-aleatoria"></span></p>
+      </div>
+      <div class="column">
+        <h2>Preguntas:</h2>
+        <ul id="preguntas">
+          <!-- Mostrar preguntas existentes -->
+          <script>
+            preguntasRespuestas.forEach(function(item) {
+              var preguntaHTML = '<li>' + item.id + '. ' + item.pregunta + '</li>';
+              document.getElementById("preguntas").innerHTML += preguntaHTML;
+            });
+          </script>
+        </ul>
+      </div>
     </div>
-    <div class="column">
-      <h2>Preguntas:</h2>
-      <ul id="preguntas">
-        <!-- Mostrar preguntas existentes -->
-        <script>
-          preguntasRespuestas.forEach(function(item) {
-            var preguntaHTML = '<li>' + item.id + '. ' + item.pregunta + ' <button onclick="toggleRespuesta(' + item.id + ')" id="toggle-' + item.id + '">Mostrar respuesta</button></li>';
-            document.getElementById("preguntas").innerHTML += preguntaHTML;
-          });
-        </script>
-      </ul>
-      <h2>Respuestas:</h2>
-      <ul id="respuestas">
-        <!-- Mostrar respuestas ocultas -->
-        <script>
-          preguntasRespuestas.forEach(function(item) {
-            var respuestaHTML = '<li class="respuesta" id="respuesta-' + item.id + '">' + item.respuesta + '</li>';
-            document.getElementById("respuestas").innerHTML += respuestaHTML;
-          });
-        </script>
-      </ul>
+    <h2>Respuestas:</h2>
+    <ul id="respuestas">
+      <!-- Mostrar respuestas existentes -->
+      <script>
+        preguntasRespuestas.forEach(function(item) {
+          var respuestaHTML = '<li class="respuesta" id="respuesta-' + item.id + '">' + item.respuesta + '</li>';
+          document.getElementById("respuestas").innerHTML += respuestaHTML;
+        });
+      </script>
+    </ul>
+    <div class="right-align">
+      <h2>Acciones:</h2>
+      <input type="number" id="id-borrar" placeholder="ID de pregunta a borrar">
+      <button onclick="borrarPregunta()">Borrar pregunta</button>
+      <button onclick="agregarPregunta()">Agregar pregunta</button>
     </div>
   </div>
 </body>
