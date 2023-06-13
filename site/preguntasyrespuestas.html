@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Selector de preguntas y respuestas</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@openai/chat-gpt/dist/chat-gpt.js"></script>
+  <script>
+    // Diccionario de preguntas y respuestas
+    var preguntasRespuestas = {
+      "1": {
+        pregunta: "¿Cuál es la capital de Francia?",
+        respuesta: ""
+      },
+      "2": {
+        pregunta: "¿Cuánto es 2 + 2?",
+        respuesta: ""
+      },
+      "3": {
+        pregunta: "¿Quién escribió 'Don Quijote de la Mancha'?",
+        respuesta: ""
+      },
+      "4": {
+        pregunta: "¿Cuál es el océano más grande del mundo?",
+        respuesta: ""
+      },
+      "5": {
+        pregunta: "¿Cuántos planetas hay en el sistema solar?",
+        respuesta: ""
+      }
+    };
+
+    // Inicializar el modelo de ChatGPT
+    var chatGpt = new ChatGPT({
+      apiKey: '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', // Reemplaza con tu propia API key de OpenAI
+      model: 'gpt-3.5-turbo',
+      language: 'es',
+      temperature: 0.6
+    });
+
+    // Función para seleccionar una pregunta aleatoria y obtener su respuesta
+    async function seleccionarPregunta() {
+      var keys = Object.keys(preguntasRespuestas);
+      var randomKey = keys[Math.floor(Math.random() * keys.length)];
+      var preguntaSeleccionada = preguntasRespuestas[randomKey].pregunta;
+
+      // Obtener respuesta del modelo de ChatGPT
+      var respuesta = await chatGpt.sendMessage(preguntaSeleccionada);
+      preguntasRespuestas[randomKey].respuesta = respuesta.choices[0].message.content;
+
+      // Mostrar pregunta y respuesta
+      document.getElementById("pregunta").innerHTML = preguntaSeleccionada;
+      document.getElementById("respuesta").innerHTML = respuesta.choices[0].message.content;
+    }
+
+    // Función para agregar una pregunta al diccionario
+    function agregarPregunta() {
+      var nuevaPregunta = prompt("Ingrese una nueva pregunta:");
+      if (nuevaPregunta) {
+        var keys = Object.keys(preguntasRespuestas);
+        var newKey = (Math.max(...keys.map(Number)) + 1).toString();
+        preguntasRespuestas[newKey] = {
+          pregunta: nuevaPregunta,
+          respuesta: ""
+        };
+      }
+    }
+  </script>
+</head>
+<body>
+  <h1>Selector de preguntas y respuestas</h1>
+  <button onclick="seleccionarPregunta()">Seleccionar pregunta aleatoria</button>
+  <p><strong>Pregunta:</strong> <span id="pregunta"></span></p>
+  <p><strong>Respuesta:</strong> <span id="respuesta"></span></p>
+  <button onclick="agregarPregunta()">Agregar nueva pregunta</button>
+
+  <script>
+    // Cargar el modelo de ChatGPT
+    chatGpt.load();
+  </script>
+</body>
+</html>
