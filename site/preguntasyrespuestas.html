@@ -6,12 +6,6 @@
     .respuesta {
       display: none;
     }
-    .toggle-button {
-      margin-left: 2em;
-      background-color: transparent;
-      border: none;
-      cursor: pointer;
-    }
   </style>
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   <script>
@@ -22,7 +16,6 @@
     function toggleRespuestaAleatoria() {
       var respuestaElement = document.getElementById("respuesta-aleatoria");
       var toggleButton = document.getElementById("toggle-aleatoria");
-
       if (respuestaElement && toggleButton) {
         if (respuestaElement.style.display === "none") {
           respuestaElement.style.display = "block";
@@ -50,7 +43,6 @@
     function toggleRespuesta(id) {
       var respuestaElement = document.getElementById("respuesta-" + id);
       var toggleButton = document.getElementById("toggle-" + id);
-
       if (respuestaElement && toggleButton) {
         if (respuestaElement.style.display === "none") {
           respuestaElement.style.display = "block";
@@ -118,7 +110,7 @@
   <h2>Pregunta Aleatoria:</h2>
   <button onclick="mostrarPreguntaAleatoria()">Mostrar pregunta aleatoria</button>
   <p><strong>Pregunta:</strong> <span id="pregunta-aleatoria"></span></p>
-  <button class="toggle-button" id="toggle-aleatoria" onclick="toggleRespuestaAleatoria()">Mostrar respuesta</button>
+  <button onclick="toggleRespuestaAleatoria()" id="toggle-aleatoria">Mostrar respuesta</button>
   <p><strong>Respuesta:</strong> <span id="respuesta-aleatoria"></span></p>
   <h2>Preguntas:</h2>
   <ul id="preguntas">
