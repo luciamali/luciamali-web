@@ -1,90 +1,203 @@
-// Función para mostrar u ocultar la respuesta de la pregunta aleatoria
-function toggleRespuestaAleatoria() {
-  var respuestaElement = document.getElementById("respuesta-aleatoria");
-  var toggleButton = document.getElementById("toggle-aleatoria");
-  if (respuestaElement && toggleButton) {
-    if (respuestaElement.style.display === "none") {
-      respuestaElement.style.display = "block";
-      toggleButton.textContent = "Ocultar respuesta";
-    } else {
-      respuestaElement.style.display = "none";
-      toggleButton.textContent = "Mostrar respuesta";
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Selector de preguntas y respuestas</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f1f1f1;
     }
-  }
-}
 
-// Función para mostrar una pregunta aleatoria y su respuesta
-function mostrarPreguntaAleatoria() {
-  var randomIndex = Math.floor(Math.random() * preguntasRespuestas.length);
-  var randomPregunta = preguntasRespuestas[randomIndex];
-  if (randomPregunta) {
-    document.getElementById("pregunta-aleatoria").textContent = randomPregunta.pregunta;
-    document.getElementById("respuesta-aleatoria").textContent = randomPregunta.respuesta;
-    document.getElementById("respuesta-aleatoria").style.display = "none";
-    document.getElementById("toggle-aleatoria").textContent = "Mostrar respuesta";
-  }
-}
-
-// Función para mostrar u ocultar la respuesta de una pregunta de la lista
-function toggleRespuesta(id) {
-  var respuestaElement = document.getElementById("respuesta-" + id);
-  var toggleButton = document.getElementById("toggle-" + id);
-  if (respuestaElement && toggleButton) {
-    if (respuestaElement.style.display === "none") {
-      respuestaElement.style.display = "block";
-      toggleButton.textContent = "Ocultar respuesta";
-    } else {
-      respuestaElement.style.display = "none";
-      toggleButton.textContent = "Mostrar respuesta";
+    h1 {
+      text-align: center;
+      margin-top: 2rem;
+      color: #333;
     }
-  }
-}
 
-// Función para agregar una pregunta y su respuesta al diccionario
-function agregarPregunta() {
-  var nuevaPregunta = prompt("Ingrese una nueva pregunta:");
-  var nuevaRespuesta = prompt("Ingrese la respuesta a la pregunta:");
+    h2 {
+      color: #555;
+      margin-top: 2rem;
+    }
 
-  if (nuevaPregunta && nuevaRespuesta) {
-    var nuevoId = preguntasRespuestas.length + 1;
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
 
-    preguntasRespuestas.push({
-      id: nuevoId,
-      pregunta: nuevaPregunta,
-      respuesta: nuevaRespuesta
-    });
+    .columns {
+      display: flex;
+    }
 
-    // Guardar las preguntas y respuestas actualizadas en el almacenamiento local
-    localStorage.setItem("preguntasRespuestas", JSON.stringify(preguntasRespuestas));
+    .column {
+      flex: 1;
+    }
 
-    // Agregar la nueva pregunta y respuesta al DOM
-    var nuevaPreguntaHTML = '<li>' + nuevoId + '. ' + nuevaPregunta + '</li>';
-    var nuevaRespuestaHTML = '<li><button id="toggle-' + nuevoId + '" onclick="toggleRespuesta(' + nuevoId + ')">Mostrar respuesta</button><span class="respuesta" id="respuesta-' + nuevoId + '">' + nuevaRespuesta + '</span></li>';
-    document.getElementById("preguntas-respuestas").innerHTML += nuevaPreguntaHTML + nuevaRespuestaHTML;
-  }
-}
+    .column.left {
+      margin-right: 2rem;
+    }
 
-// Función para borrar una pregunta y su respuesta del diccionario
-function borrarPregunta() {
-  var idBorrar = parseInt(document.getElementById("id-borrar").value);
+    button {
+      font-family: Arial, sans-serif;
+      font-size: 10px;
+      color: #fff;
+      background-color: #333;
+      border: none;
+      padding: 4px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      float: right;
+    }
 
-  // Filtrar las preguntas y respuestas para obtener el nuevo arreglo sin la pregunta a borrar
-  preguntasRespuestas = preguntasRespuestas.filter(function(item) {
-    return item.id !== idBorrar;
-  });
+    button:hover {
+      background-color: #555;
+    }
 
-  // Guardar las preguntas y respuestas actualizadas en el almacenamiento local
-  localStorage.setItem("preguntasRespuestas", JSON.stringify(preguntasRespuestas));
+    p {
+      margin-bottom: 1rem;
+    }
 
-  // Remover la pregunta y respuesta del DOM
-  var preguntaElement = document.getElementById("pregunta-" + idBorrar);
-  var respuestaElement = document.getElementById("respuesta-" + idBorrar);
+    .respuesta {
+      display: none;
+      margin-left: 2rem;
+    }
+  </style>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <script>
+    // Obtener las preguntas y respuestas del almacenamiento local o utilizar un arreglo vacío si no hay datos guardados
+    var preguntasRespuestas = JSON.parse(localStorage.getItem("preguntasRespuestas")) || [];
 
-  if (preguntaElement) {
-    preguntaElement.remove();
-  }
+    // Función para mostrar u ocultar la respuesta de la pregunta aleatoria
+    function toggleRespuestaAleatoria() {
+      var respuestaElement = document.getElementById("respuesta-aleatoria");
+      var toggleButton = document.getElementById("toggle-aleatoria");
+      if (respuestaElement && toggleButton) {
+        if (respuestaElement.style.display === "none") {
+          respuestaElement.style.display = "block";
+          toggleButton.textContent = "Ocultar respuesta";
+        } else {
+          respuestaElement.style.display = "none";
+          toggleButton.textContent = "Mostrar respuesta";
+        }
+      }
+    }
 
-  if (respuestaElement) {
-    respuestaElement.parentNode.remove();
-  }
-}
+    // Función para mostrar una pregunta aleatoria y su respuesta
+    function mostrarPreguntaAleatoria() {
+      var randomIndex = Math.floor(Math.random() * preguntasRespuestas.length);
+      var randomPregunta = preguntasRespuestas[randomIndex];
+      if (randomPregunta) {
+        document.getElementById("pregunta-aleatoria").textContent = randomPregunta.pregunta;
+        document.getElementById("respuesta-aleatoria").textContent = randomPregunta.respuesta;
+        document.getElementById("respuesta-aleatoria").style.display = "none";
+        document.getElementById("toggle-aleatoria").textContent = "Mostrar respuesta";
+      }
+    }
+
+    // Función para mostrar u ocultar la respuesta de una pregunta de la lista
+    function toggleRespuesta(id) {
+      var respuestaElement = document.getElementById("respuesta-" + id);
+      var toggleButton = document.getElementById("toggle-" + id);
+      if (respuestaElement && toggleButton) {
+        if (respuestaElement.style.display === "none") {
+          respuestaElement.style.display = "block";
+          toggleButton.textContent = "Ocultar respuesta";
+        } else {
+          respuestaElement.style.display = "none";
+          toggleButton.textContent = "Mostrar respuesta";
+        }
+      }
+    }
+
+    // Función para agregar una pregunta y su respuesta al diccionario
+    function agregarPregunta() {
+      var nuevaPregunta = prompt("Ingrese una nueva pregunta:");
+      var nuevaRespuesta = prompt("Ingrese la respuesta a la pregunta:");
+
+      if (nuevaPregunta && nuevaRespuesta) {
+        var nuevoId = preguntasRespuestas.length + 1;
+
+        preguntasRespuestas.push({
+          id: nuevoId,
+          pregunta: nuevaPregunta,
+          respuesta: nuevaRespuesta
+        });
+
+        // Guardar las preguntas y respuestas actualizadas en el almacenamiento local
+        localStorage.setItem("preguntasRespuestas", JSON.stringify(preguntasRespuestas));
+
+        // Agregar la nueva pregunta y respuesta al DOM
+        var nuevaPreguntaHTML = '<li>' + nuevoId + '. ' + nuevaPregunta + '</li>';
+        var nuevaRespuestaHTML = '<li><button id="toggle-' + nuevoId + '" onclick="toggleRespuesta(' + nuevoId + ')">Mostrar respuesta</button><span class="respuesta" id="respuesta-' + nuevoId + '">' + nuevaRespuesta + '</span></li>';
+        document.getElementById("preguntas").innerHTML += nuevaPreguntaHTML;
+        document.getElementById("respuestas").innerHTML += nuevaRespuestaHTML;
+      }
+    }
+
+    // Función para borrar una pregunta y su respuesta del diccionario
+    function borrarPregunta() {
+      var idBorrar = parseInt(document.getElementById("id-borrar").value);
+
+      // Filtrar las preguntas y respuestas para obtener el nuevo arreglo sin la pregunta a borrar
+      preguntasRespuestas = preguntasRespuestas.filter(function(item) {
+        return item.id !== idBorrar;
+      });
+
+      // Guardar las preguntas y respuestas actualizadas en el almacenamiento local
+      localStorage.setItem("preguntasRespuestas", JSON.stringify(preguntasRespuestas));
+
+      // Remover la pregunta y respuesta del DOM
+      var preguntaElement = document.getElementById("pregunta-" + idBorrar);
+      var respuestaElement = document.getElementById("respuesta-" + idBorrar);
+
+      if (preguntaElement) {
+        preguntaElement.remove();
+      }
+
+      if (respuestaElement) {
+        respuestaElement.parentNode.remove();
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h1>Selector de preguntas y respuestas</h1>
+    <div class="columns">
+      <div class="column left">
+        <h2>Pregunta Aleatoria:</h2>
+        <button onclick="mostrarPreguntaAleatoria()">Mostrar pregunta aleatoria</button>
+        <p><strong>Pregunta:</strong> <span id="pregunta-aleatoria"></span></p>
+        <button onclick="toggleRespuestaAleatoria()" id="toggle-aleatoria">Mostrar respuesta</button>
+        <p><strong>Respuesta:</strong> <span id="respuesta-aleatoria"></span></p>
+      </div>
+      <div class="column right">
+        <div>
+          <h3>Acciones:</h3>
+          <button onclick="agregarPregunta()">Agregar pregunta</button>
+        </div>
+        <div>
+          <input type="number" id="id-borrar" placeholder="ID de la pregunta a borrar">
+          <button onclick="borrarPregunta()">Borrar pregunta</button>
+        </div>
+        <h2>Preguntas y Respuestas:</h2>
+        <ul id="preguntas-respuestas">
+          <!-- Mostrar preguntas y respuestas existentes -->
+          <script>
+            preguntasRespuestas.forEach(function(item) {
+              var preguntaHTML = '<li>' + item.id + '. ' + item.pregunta + '</li>';
+              var respuestaHTML = '<li><button id="toggle-' + item.id + '" onclick="toggleRespuesta(' + item.id + ')">Mostrar respuesta</button><span class="respuesta" id="respuesta-' + item.id + '">' + item.respuesta + '</span></li>';
+              document.getElementById("preguntas-respuestas").innerHTML += preguntaHTML + respuestaHTML;
+            });
+          </script>
+        </ul>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
