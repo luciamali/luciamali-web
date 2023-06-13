@@ -3,66 +3,6 @@
 <head>
   <title>Selector de preguntas y respuestas</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f2f2f2;
-      margin: 0;
-      padding: 0;
-    }
-
-    .container {
-      max-width: 800px;
-      margin: 20px auto;
-      padding: 20px;
-      background-color: #fff;
-      box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-      border-radius: 5px;
-    }
-
-    h1 {
-      font-size: 24px;
-      text-align: center;
-      margin-top: 0;
-    }
-
-    h2 {
-      font-size: 20px;
-      margin-top: 20px;
-    }
-
-    button {
-      background-color: #007bff;
-      color: #fff;
-      border: none;
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-      border-radius: 5px;
-      margin-top: 10px;
-    }
-
-    button:hover {
-      background-color: #0056b3;
-    }
-
-    ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .preguntas-list {
-      overflow-y: auto;
-      max-height: 400px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      padding: 10px;
-    }
-
-    .preguntas-list li {
-      margin-bottom: 10px;
-    }
-
     .respuesta {
       display: none;
     }
@@ -137,7 +77,9 @@
         localStorage.setItem("preguntasRespuestas", JSON.stringify(preguntasRespuestas));
 
         // Agregar la nueva pregunta y respuesta al DOM
+        var nuevaPreguntaHTML = '<li><button onclick="toggleRespuesta(' + nuevoId + ')" id="pregunta-' + nuevoId + '">' + nuevoId + '. ' + nuevaPregunta + '</button> <i id="icono-respuesta-' + nuevoId + '" class="fas fa-lightbulb" onclick="toggleRespuesta(' + nuevoId + ')"></i></li>';
         var nuevaRespuestaHTML = '<li class="respuesta" id="respuesta-' + nuevoId + '">' + nuevaRespuesta + '</li>';
+        document.getElementById("preguntas").innerHTML += nuevaPreguntaHTML;
         document.getElementById("respuestas").innerHTML += nuevaRespuestaHTML;
       }
     }
@@ -155,45 +97,146 @@
       localStorage.setItem("preguntasRespuestas", JSON.stringify(preguntasRespuestas));
 
       // Remover la pregunta y respuesta del DOM
+      var preguntaElement = document.getElementById("pregunta-" + idBorrar);
       var respuestaElement = document.getElementById("respuesta-" + idBorrar);
+
+      if (preguntaElement) {
+        preguntaElement.remove();
+      }
 
       if (respuestaElement) {
         respuestaElement.remove();
       }
     }
-
-    // Función para generar una representación en JSON de las preguntas y respuestas
-    function generarJSON() {
-      var preguntasJSON = JSON.stringify(preguntasRespuestas, null, 2);
-      document.getElementById("preguntas-json").innerHTML = preguntasJSON;
-    }
   </script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      padding: 0;
+      background-color: #f5f5f5;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .pregunta-aleatoria {
+      margin-bottom: 20px;
+    }
+
+    .preguntas-list {
+      margin-left: 30px;
+      padding-left: 20px;
+      border-left: 2px solid #ddd;
+    }
+
+    .preguntas-list ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .preguntas-list li {
+      margin-bottom: 10px;
+    }
+
+    .preguntas-list button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      color: #333;
+      text-decoration: underline;
+      margin-right: 5px;
+    }
+
+    .respuesta {
+      display: none;
+      margin-left: 20px;
+    }
+
+    .icono-respuesta {
+      cursor: pointer;
+      color: #888;
+    }
+
+    .icono-respuesta:hover {
+      color: #333;
+    }
+
+    .agregar-pregunta {
+      margin-bottom: 20px;
+    }
+
+    .borrar-pregunta {
+      margin-bottom: 20px;
+    }
+
+    .json-preguntas {
+      white-space: pre-wrap;
+      background-color: #f5f5f5;
+      padding: 10px;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
     <h1>Selector de preguntas y respuestas</h1>
-    <h2>Pregunta Aleatoria:</h2>
-    <button onclick="mostrarPreguntaAleatoria()">Mostrar pregunta aleatoria</button>
-    <p><strong>Pregunta:</strong> <span id="pregunta-aleatoria"></span></p>
-    <button onclick="toggleRespuestaAleatoria()"><i id="icono-respuesta-aleatoria" class="fas fa-lightbulb"></i></button>
-    <p><strong>Respuesta:</strong></p>
-    <p id="respuesta-aleatoria"></p>
 
-    <h2>Lista de Preguntas:</h2>
-    <div class="preguntas-list">
-      <ul id="respuestas"></ul>
+    <div class="pregunta-aleatoria">
+      <h2>Pregunta aleatoria:</h2>
+      <p id="pregunta-aleatoria"></p>
+      <p><button onclick="toggleRespuestaAleatoria()"><i id="icono-respuesta-aleatoria" class="fas fa-lightbulb"></i> Mostrar respuesta</button></p>
+      <p class="respuesta" id="respuesta-aleatoria"></p>
     </div>
 
-    <h2>Agregar Nueva Pregunta:</h2>
-    <button onclick="agregarPregunta()">Agregar pregunta</button>
+    <div class="preguntas-list">
+      <h2>Lista de preguntas:</h2>
+      <ul id="preguntas">
+        <!-- Las preguntas se agregarán dinámicamente aquí -->
+      </ul>
+    </div>
 
-    <h2>Borrar Pregunta:</h2>
-    <input type="number" id="id-borrar" placeholder="Ingrese el ID de la pregunta a borrar">
-    <button onclick="borrarPregunta()">Borrar pregunta</button>
+    <div class="agregar-pregunta">
+      <h2>Agregar pregunta:</h2>
+      <p><button onclick="agregarPregunta()">Agregar nueva pregunta</button></p>
+    </div>
 
-    <h2>JSON de Preguntas y Respuestas:</h2>
-    <button onclick="generarJSON()">Generar JSON</button>
-    <pre id="preguntas-json"></pre>
+    <div class="borrar-pregunta">
+      <h2>Borrar pregunta:</h2>
+      <p>Ingrese el ID de la pregunta a borrar:</p>
+      <p><input type="number" id="id-borrar"></p>
+      <p><button onclick="borrarPregunta()">Borrar pregunta</button></p>
+    </div>
+
+    <div class="json-preguntas">
+      <h2>JSON de preguntas y respuestas:</h2>
+      <pre id="json-preguntas"></pre>
+    </div>
   </div>
+
+  <script>
+    // Mostrar las preguntas y respuestas al cargar la página
+    for (var i = 0; i < preguntasRespuestas.length; i++) {
+      var pregunta = preguntasRespuestas[i];
+      var preguntaHTML = '<li><button onclick="toggleRespuesta(' + pregunta.id + ')" id="pregunta-' + pregunta.id + '">' + pregunta.id + '. ' + pregunta.pregunta + '</button> <i id="icono-respuesta-' + pregunta.id + '" class="fas fa-lightbulb" onclick="toggleRespuesta(' + pregunta.id + ')"></i></li>';
+      var respuestaHTML = '<li class="respuesta" id="respuesta-' + pregunta.id + '">' + pregunta.respuesta + '</li>';
+      document.getElementById("preguntas").innerHTML += preguntaHTML;
+      document.getElementById("respuestas").innerHTML += respuestaHTML;
+    }
+
+    // Mostrar el JSON de preguntas y respuestas al cargar la página
+    document.getElementById("json-preguntas").innerHTML = JSON.stringify(preguntasRespuestas, null, 2);
+  </script>
 </body>
 </html>
